@@ -1,0 +1,64 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Users {
+    id             Int              @id @default(autoincrement())
+    profilePicture String           @db.VarChar(500)
+    firstName      String           @db.VarChar(25)
+    lastName       String           @db.VarChar(25)
+    email          String           @db.VarChar(50)
+    password       String           @db.VarChar(128)
+    role           Int
+    Projects       Projects?        @relation(fields: [projectsId], references: [id])
+    projectsId     Int?
+    UsersInProject UsersInProject[]
+}
+
+model Roles {
+    id   Int    @id @default(autoincrement())
+    name String @db.VarChar(50)
+}
+
+model Projects {
+    id             Int              @id @default(autoincrement())
+    name           String           @db.VarChar(50)
+    description    String           @db.VarChar(255)
+    members        Users[]
+    createdAt      DateTime         @db.Timestamp
+    finishedAt     DateTime         @db.Timestamp
+    estimateEndAt  DateTime         @db.Timestamp
+    UsersInProject UsersInProject[]
+}
+
+model UsersInProject {
+    user      Users    @relation(fields: [userId], references: [id])
+    userId    Int
+    project   Projects @relation(fields: [projectId], references: [id])
+    projectId Int
+
+    @@id([userId, projectId])
+}
+
+model Tickets {
+    id           Int      @id @default(autoincrement())
+    projectId    Int
+    statusId     Int
+    assigneeId   Int
+    labelId      Int
+    name         String   @db.VarChar(50)
+    description  String   @db.VarChar(500)
+    createdAt    DateTime @db.Timestamp
+    finishedAt   DateTime @db.Timestamp
+    timeSpent    Int
+    timeEstimate Int
+    difficulty   Int
+    displayOrder Int
+}
+
+model status {
+    id        Int    @id @default(autoincrement())
+    projectId Int
+    name      String @db.VarChar(50)
+}
