@@ -3,6 +3,10 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+generator client {
+    provider = "prisma-client-js"
+}
+
 model Users {
     id             Int              @id @default(autoincrement())
     profilePicture String           @db.VarChar(500)
@@ -10,15 +14,15 @@ model Users {
     lastName       String           @db.VarChar(25)
     email          String           @db.VarChar(50)
     password       String           @db.VarChar(128)
-    role           Int
     Projects       Projects?        @relation(fields: [projectsId], references: [id])
     projectsId     Int?
     UsersInProject UsersInProject[]
 }
 
 model Roles {
-    id   Int    @id @default(autoincrement())
-    name String @db.VarChar(50)
+    id             Int              @id @default(autoincrement())
+    name           String           @db.VarChar(50)
+    UsersInProject UsersInProject[]
 }
 
 model Projects {
@@ -37,8 +41,10 @@ model UsersInProject {
     userId    Int
     project   Projects @relation(fields: [projectId], references: [id])
     projectId Int
+    role      Roles    @relation(fields: [roleId], references: [id])
+    roleId    Int
 
-    @@id([userId, projectId])
+    @@id([userId, projectId, roleId])
 }
 
 model Tickets {
@@ -46,15 +52,10 @@ model Tickets {
     projectId    Int
     statusId     Int
     assigneeId   Int
-    labelId      Int
     name         String   @db.VarChar(50)
     description  String   @db.VarChar(500)
     createdAt    DateTime @db.Timestamp
     finishedAt   DateTime @db.Timestamp
-    timeSpent    Int
-    timeEstimate Int
-    difficulty   Int
-    displayOrder Int
 }
 
 model status {
