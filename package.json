@@ -1,4 +1,6 @@
 {
+  "name": "taskberry-back",
+  "license": "MIT",
   "scripts": {
     "start": "nodemon src/index.ts"
   },
@@ -8,11 +10,19 @@
     "@types/node": "^16.11.10",
     "apollo-server": "^3.5.0",
     "bcrypt": "^5.0.1",
+    "class-validator": "^0.13.2",
     "cors": "^2.8.5",
-    "graphql": "^16.0.1",
+    "graphql": "15.3.0",
+    "graphql-fields": "^2.0.3",
+    "graphql-scalars": "^1.13.6",
+    "graphql-type-json": "^0.3.2",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.15",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^10.4.0",
+    "type-graphql": "^1.1.1",
+    "typegraphql-prisma": "^0.18.0",
     "typescript": "^4.5.2"
   },
   "devDependencies": {
@@ -20,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.3.0",
-    "jest": "^27.3.1"
+    "jest": "^27.3.1",
+    "prisma": "^3.5.0"
   }
 }
