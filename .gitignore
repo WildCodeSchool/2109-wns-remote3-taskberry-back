@@ -3,3 +3,4 @@ node_modules
 src/prisma/migrations
 .vscode
 .DS_Store
+yarn-error.log
