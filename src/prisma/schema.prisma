@@ -1,10 +1,14 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+generator typegraphql {
+    provider = "typegraphql-prisma"
+}
+
 datasource db {
     provider = "mysql"
     url      = env("DATABASE_URL")
-}
-
-generator client {
-    provider = "prisma-client-js"
 }
 
 model Users {
@@ -12,7 +16,7 @@ model Users {
     profilePicture String           @db.VarChar(500)
     firstName      String           @db.VarChar(25)
     lastName       String           @db.VarChar(25)
-    email          String           @db.VarChar(50)
+    email          String           @db.VarChar(50) @unique
     password       String           @db.VarChar(128)
     Projects       Projects?        @relation(fields: [projectsId], references: [id])
     projectsId     Int?
@@ -37,6 +41,7 @@ model Projects {
 }
 
 model UsersInProject {
+    id        Int      @unique
     user      Users    @relation(fields: [userId], references: [id])
     userId    Int
     project   Projects @relation(fields: [projectId], references: [id])
@@ -48,17 +53,17 @@ model UsersInProject {
 }
 
 model Tickets {
-    id           Int      @id @default(autoincrement())
-    projectId    Int
-    statusId     Int
-    assigneeId   Int
-    name         String   @db.VarChar(50)
-    description  String   @db.VarChar(500)
-    createdAt    DateTime @db.Timestamp
-    finishedAt   DateTime @db.Timestamp
+    id          Int      @id @default(autoincrement())
+    projectId   Int
+    statusId    Int
+    assigneeId  Int
+    name        String   @db.VarChar(50)
+    description String   @db.VarChar(500)
+    createdAt   DateTime @db.Timestamp
+    finishedAt  DateTime @db.Timestamp
 }
 
-model status {
+model Status {
     id        Int    @id @default(autoincrement())
     projectId Int
     name      String @db.VarChar(50)
