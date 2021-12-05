@@ -1,25 +1,42 @@
 import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
+import {
+  InputType,
+  Field,
+  ObjectType,
+} from "type-graphql";
 import { IsEmail } from "class-validator";
 
-@ObjectType()
-export class User {
-  @Field(() => ID)
-  id!: number;
+@InputType()
+export class UserMutation {
+  @Field(() => String)
+  profilePicture!: string;
 
   @Field(() => String)
-  profilePicture?: string;
+  firstName!: string;
 
   @Field(() => String)
-  firstName?: string;
-
-  @Field(() => String)
-  lastName?: string;
+  lastName!: string;
 
   @Field()
   @IsEmail()
   email!: string;
 
-  @Field(() => String)
+  @Field()
   password!: string;
+}
+
+@ObjectType()
+export class UserQuery {
+  @Field(() => String)
+  profilePicture!: string;
+
+  @Field(() => String)
+  firstName!: string;
+
+  @Field(() => String)
+  lastName!: string;
+
+  @Field()
+  @IsEmail()
+  email!: string;
 }
