@@ -1,58 +1,56 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Ctx,
-  Arg,
-  InputType,
-  Field,
-} from "type-graphql";
+import { Resolver, Query, Mutation, Ctx, Arg } from "type-graphql";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import { Context } from "../context";
-import { User } from "../models/User";
+import { UserMutation, UserQuery } from "../models/User";
+import { AuthenticationError } from "apollo-server-errors";
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-@InputType()
-class UserCreateInput {
-  @Field(() => String)
-  profilePicture!: string;
-
-  @Field(() => String)
-  firstName!: string;
-
-  @Field(() => String)
-  lastName!: string;
-
-  @Field()
-  email!: string;
-
-  @Field()
-  password!: string;
+interface Context {
+  token: string | undefined;
 }
+
+const getUserByToken = async (token: string | undefined) => {
+  if (!token) {
+    throw new AuthenticationError("missing jwt");
+  }
+
+  let decodeToken: any = jwt.verify(token, "taskberry");
+  if (!decodeToken) {
+    throw new AuthenticationError("jwt expired");
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { email: decodeToken.email },
+  });
+
+  return user;
+};
 
 @Resolver()
 export class UserResolver {
-  @Query(() => [User])
+  @Query(() => [UserQuery])
   async getUsers(@Ctx() ctx: Context) {
-    return ctx.prisma.users.findMany();
+    await getUserByToken(ctx.token);
+
+    return prisma.users.findMany();
   }
 
-  @Query(() => User)
-  async getUser(@Ctx() ctx: Context, @Arg("id") id: number) {
-    return ctx.prisma.users.findUnique({ where: { id: id } });
+  @Query(() => UserQuery)
+  async getUser(@Arg("id") id: number, @Ctx() ctx: Context) {
+    await getUserByToken(ctx.token);
+
+    return prisma.users.findUnique({ where: { id: id } });
   }
 
   @Query(() => String)
   async loginUser(
-    @Ctx() ctx: Context,
     @Arg("email") email: string,
     @Arg("password") password: string
   ) {
-    const userToVerify: User | null = await ctx.prisma.users.findUnique({
+    const userToVerify: UserMutation | null = await prisma.users.findUnique({
       where: { email: email },
     });
 
@@ -75,14 +73,13 @@ export class UserResolver {
     }
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserQuery)
   async createUser(
-    @Arg("data") data: UserCreateInput,
-    @Ctx() ctx: Context
-  ): Promise<User> {
+    @Arg("data") data: UserMutation
+  ): Promise<UserQuery> {
     const hash: string = await bcrypt.hash(data.password, saltRounds);
 
-    return ctx.prisma.users.create({
+    return prisma.users.create({
       data: {
         profilePicture: data.profilePicture,
         email: data.email,
