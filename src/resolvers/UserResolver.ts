@@ -22,7 +22,7 @@ const getUserByToken = async (token: string | undefined) => {
     throw new AuthenticationError("jwt expired");
   }
 
-  const user = await prisma.users.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email: decodeToken.email },
   });
 
@@ -35,14 +35,14 @@ export class UserResolver {
   async getUsers(@Ctx() ctx: Context) {
     await getUserByToken(ctx.token);
 
-    return prisma.users.findMany();
+    return prisma.user.findMany();
   }
 
   @Query(() => UserQuery)
   async getUser(@Arg("id") id: number, @Ctx() ctx: Context) {
     await getUserByToken(ctx.token);
 
-    return prisma.users.findUnique({ where: { id: id } });
+    return prisma.user.findUnique({ where: { id: id } });
   }
 
   @Query(() => String)
@@ -50,7 +50,7 @@ export class UserResolver {
     @Arg("email") email: string,
     @Arg("password") password: string
   ) {
-    const userToVerify: UserMutation | null = await prisma.users.findUnique({
+    const userToVerify: UserMutation | null = await prisma.user.findUnique({
       where: { email: email },
     });
 
@@ -79,7 +79,7 @@ export class UserResolver {
   ): Promise<UserQuery> {
     const hash: string = await bcrypt.hash(data.password, saltRounds);
 
-    return prisma.users.create({
+    return prisma.user.create({
       data: {
         profilePicture: data.profilePicture,
         email: data.email,
