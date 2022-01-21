@@ -52,6 +52,18 @@ const projectsRepository = {
       },
     });
   },
+
+  getUserProjects: async (userId: number): Promise<any> => {
+    return prisma.project.findMany({
+      where: {
+        UsersInProject: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+  },
 };
 
 export default projectsRepository;

@@ -19,7 +19,9 @@ const projectService = {
     return projectsRepository.create(projectInput);
   },
 
-  addProjectMember: (memberInput: ProjectMemberInput): Promise<UsersProject> => {
+  addProjectMember: (
+    memberInput: ProjectMemberInput
+  ): Promise<UsersProject> => {
     const { roleId, userId, projectId } = memberInput;
 
     if (!roleId) {
@@ -35,6 +37,14 @@ const projectService = {
     }
 
     return projectsRepository.addProjectMember(memberInput);
+  },
+
+  getUserProjects: (userId: number): Promise<Project[]> => {
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
+
+    return projectsRepository.getUserProjects(userId);
   },
 };
 

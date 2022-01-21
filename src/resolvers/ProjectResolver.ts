@@ -24,4 +24,9 @@ export class ProjectResolver {
   async getProjects() {
     return prisma.project.findMany();
   }
+
+  @Query(() => [Project])
+  async getUserProjects(@Arg("userId") userId: number) {
+    return await projectService.getUserProjects(userId);
+  }
 }
