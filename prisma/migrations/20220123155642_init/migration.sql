@@ -23,10 +23,10 @@ CREATE TABLE `Role` (
 CREATE TABLE `Project` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
-    `description` VARCHAR(255) NOT NULL,
+    `description` VARCHAR(255) NULL,
     `createdAt` TIMESTAMP NOT NULL,
     `finishedAt` TIMESTAMP NULL,
-    `estimateEndAt` TIMESTAMP NOT NULL,
+    `estimateEndAt` TIMESTAMP NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
