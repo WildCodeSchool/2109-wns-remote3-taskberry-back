@@ -53,7 +53,7 @@ const projectsRepository = {
     });
   },
 
-  getUserProjects: async (userId: number): Promise<any> => {
+  getUserProjects: async (userId: number): Promise<Project[]> => {
     return prisma.project.findMany({
       where: {
         UsersInProject: {
@@ -61,6 +61,14 @@ const projectsRepository = {
             userId,
           },
         },
+      },
+    });
+  },
+
+  getProjectById: async (projectId: number): Promise<Project | null> => {
+    return prisma.project.findUnique({
+      where: {
+        id: projectId,
       },
     });
   },
