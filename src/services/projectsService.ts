@@ -46,6 +46,13 @@ const projectService = {
 
     return projectsRepository.getUserProjects(userId);
   },
+
+  getProjectById: (projectId: number): Promise<Project | null> => {
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
+    return projectsRepository.getProjectById(projectId);
+  },
 };
 
 export default projectService;
