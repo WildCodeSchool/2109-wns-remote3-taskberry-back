@@ -8,64 +8,64 @@ generator typegraphql {
 
 datasource db {
     provider = "mysql"
-    url      = env("DATABASE_URL")
+    url      = env("PRISMA_DATABASE_URL")
 }
 
 model User {
     id             Int               @id @default(autoincrement())
-    profilePicture  String            @db.VarChar(500)
-    firstName       String            @db.VarChar(25)
-    lastName        String            @db.VarChar(25)
-    email           String            @unique @db.VarChar(50)
-    password        String            @db.VarChar(128)
-    UsersInProject  UsersInProjects[]
-    Ticket          Ticket[]
+    profilePicture String            @db.VarChar(500)
+    firstName      String            @db.VarChar(25)
+    lastName       String            @db.VarChar(25)
+    email          String            @unique @db.VarChar(50)
+    password       String            @db.VarChar(128)
+    UsersInProject UsersInProjects[]
+    Ticket         Ticket[]
 }
 
 model Role {
-    id              Int               @id @default(autoincrement())
-    name            String            @db.VarChar(50)
-    UsersInProject  UsersInProjects[]
+    id             Int               @id @default(autoincrement())
+    name           String            @db.VarChar(50)
+    UsersInProject UsersInProjects[]
 }
 
 model Project {
-    id              Int               @id @default(autoincrement())
-    name            String            @db.VarChar(50)
-    description     String            @db.VarChar(255)
-    createdAt       DateTime          @db.Timestamp
-    finishedAt      DateTime?         @db.Timestamp
-    estimateEndAt   DateTime          @db.Timestamp
-    UsersInProject  UsersInProjects[]
-    Ticket          Ticket[]
+    id             Int               @id @default(autoincrement())
+    name           String            @db.VarChar(50)
+    description    String?           @db.VarChar(255)
+    createdAt      DateTime          @db.Timestamp
+    finishedAt     DateTime?         @db.Timestamp
+    estimateEndAt  DateTime?         @db.Timestamp
+    UsersInProject UsersInProjects[]
+    Ticket         Ticket[]
 }
 
 model UsersInProjects {
-    user            User              @relation(fields: [userId], references: [id])
-    userId          Int
-    project         Project           @relation(fields: [projectId], references: [id])
-    projectId       Int
-    role            Role              @relation(fields: [roleId], references: [id])
-    roleId          Int
-    
+    user      User    @relation(fields: [userId], references: [id])
+    userId    Int
+    project   Project @relation(fields: [projectId], references: [id])
+    projectId Int
+    role      Role    @relation(fields: [roleId], references: [id])
+    roleId    Int
+
     @@id([userId, projectId, roleId])
 }
 
 model Ticket {
-    id              Int               @id @default(autoincrement())
-    projectId       Int
-    statusId        Int
-    assigneeId      Int
-    name            String            @db.VarChar(50)
-    description     String?           @db.VarChar(500)
-    createdAt       DateTime          @db.Timestamp
-    finishedAt      DateTime?         @db.Timestamp
-    status          Status            @relation(fields: [statusId], references: [id])
-    project         Project           @relation(fields: [projectId], references: [id])
-    assignee        User              @relation(fields: [assigneeId], references: [id])
+    id          Int       @id @default(autoincrement())
+    projectId   Int
+    statusId    Int
+    assigneeId  Int
+    name        String    @db.VarChar(50)
+    description String?   @db.VarChar(500)
+    createdAt   DateTime  @db.Timestamp
+    finishedAt  DateTime? @db.Timestamp
+    status      Status    @relation(fields: [statusId], references: [id])
+    project     Project   @relation(fields: [projectId], references: [id])
+    assignee    User      @relation(fields: [assigneeId], references: [id])
 }
 
 model Status {
-    id              Int               @id @default(autoincrement())
-    name            String            @db.VarChar(50)
-    Ticket          Ticket[]
+    id     Int      @id @default(autoincrement())
+    name   String   @db.VarChar(50)
+    Ticket Ticket[]
 }
