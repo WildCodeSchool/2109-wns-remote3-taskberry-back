@@ -29,4 +29,9 @@ export class ProjectResolver {
   async getUserProjects(@Arg("userId") userId: number) {
     return await projectService.getUserProjects(userId);
   }
+  
+  @Query(() => Project)
+  async getProjectById(@Arg("projectId") projectId: number) {
+    return await projectService.getProjectById(projectId);
+  }
 }
