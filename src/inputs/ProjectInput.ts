@@ -6,14 +6,14 @@ export class ProjectInput {
   @Field()
   name!: string;
 
-  @Field()
-  description!: string;
+  @Field(() => String, { nullable: true })
+  description?: string | null;
 
-  @Field()
+  @Field(() => Date)
   createdAt!: Date;
 
-  @Field()
-  estimateEndAt!: Date;
+  @Field(() => Date, { nullable: true })
+  estimateEndAt?: Date | null;
 
   @Field(() => UsersProjectInput)
   UsersInProject!: UsersProjectInput;

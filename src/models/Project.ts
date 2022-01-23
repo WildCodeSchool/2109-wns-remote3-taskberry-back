@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID } from 'type-graphql';
-import { UsersProject } from './UsersProject';
+import { ObjectType, Field, ID } from "type-graphql";
+import { UsersProject } from "./UsersProject";
 
 @ObjectType()
 export class Project {
@@ -9,18 +9,18 @@ export class Project {
   @Field()
   name!: string;
 
-  @Field()
-  description?: string;
+  @Field(() => String, { nullable: true })
+  description!: string | null;
 
   @Field(() => Date)
-  createdAt?: Date;
+  createdAt!: Date;
 
-  @Field(() => Date)
-  finishedAt?: Date | null;
+  @Field(() => Date, { nullable: true })
+  finishedAt!: Date | null;
 
-  @Field(() => Date)
-  estimateEndAt?: Date;
+  @Field(() => Date, { nullable: true })
+  estimateEndAt!: Date | null;
 
   @Field(() => UsersProject)
-  UsersInProject?: UsersProject
+  UsersInProject?: UsersProject;
 }
