@@ -21,6 +21,6 @@ export class Project {
   @Field(() => Date, { nullable: true })
   estimateEndAt!: Date | null;
 
-  @Field(() => UsersProject)
-  UsersInProject?: UsersProject;
+  @Field(() => [UsersProject])
+  UsersInProject?: Array<UsersProject>;
 }

@@ -39,7 +39,7 @@ const projectService = {
     return projectsRepository.addProjectMember(memberInput);
   },
 
-  getUserProjects: (userId: number): Promise<Project[]> => {
+  getUserProjects: (userId: number): Promise<Array<Project>> => {
     if (!userId) {
       throw new Error("User ID is required");
     }

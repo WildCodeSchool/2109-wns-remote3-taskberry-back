@@ -62,6 +62,19 @@ const projectsRepository = {
           },
         },
       },
+      include: {
+        UsersInProject: {
+          include: {
+            user: {
+              select: {
+                profilePicture: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
     });
   },
 
