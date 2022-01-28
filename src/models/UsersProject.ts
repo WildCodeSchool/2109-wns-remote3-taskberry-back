@@ -1,13 +1,10 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
 
 @ObjectType()
 export class UsersProject {
-  @Field(() => Int)
-  userId!: number;
+  @Field(() => String)
+  firstName!: string;
 
-  @Field(() => Int)
-  projectId!: number;
-
-  @Field(() => Int)
-  roleId!: number;
+  @Field(() => String)
+  lastName!: string;
 }
