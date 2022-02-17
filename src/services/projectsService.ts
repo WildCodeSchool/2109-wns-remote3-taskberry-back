@@ -1,57 +1,64 @@
-import { Project } from "../models/Project";
+import { Project } from "../models/project/Project";
+import { UserProjects } from "../models/project/UserProjects";
 import projectsRepository from "../repositories/projectsRepository";
-import { ProjectInput } from "../inputs/ProjectInput";
-import { ProjectMemberInput } from "../inputs/ProjectMemberInput";
-import { UsersProject } from "../models/UsersProject";
+import { ProjectInput } from "../inputs/project/ProjectInput";
+import { NewMembersInput } from '../inputs/project/newMembersInput';
 
 const projectService = {
   create: (projectInput: ProjectInput): Promise<Project> => {
-    const { name } = projectInput;
+    const { title } = projectInput;
 
-    if (!name) {
-      throw new Error("Name is required");
+    if (!title) {
+      throw new Error("Title is required");
     }
 
-    if (name.length > 30) {
-      throw new Error("Name should have at least one character and max 30");
+    if (title.length > 30) {
+      throw new Error("Title should have at least one character and max 30");
     }
 
     return projectsRepository.create(projectInput);
   },
 
   addProjectMember: (
-    memberInput: ProjectMemberInput
-  ): Promise<UsersProject> => {
-    const { roleId, userId, projectId } = memberInput;
+    data: [NewMembersInput]
+  ): Promise<number> => {
+    // const { role, userId, projectId } = data;
 
-    if (!roleId) {
-      throw new Error("Role ID is required");
-    }
+    // if (!role) {
+    //   throw new Error("Role ID is required");
+    // }
 
+    // if (!userId) {
+    //   throw new Error("User ID is required");
+    // }
+
+    // if (!projectId) {
+    //   throw new Error("Project ID is required");
+    // }
+
+    return projectsRepository.addMembers(data);
+  },
+
+  getUserProjects: (userId: number): Promise<UserProjects[]> => {
     if (!userId) {
       throw new Error("User ID is required");
     }
 
-    if (!projectId) {
-      throw new Error("Project ID is required");
-    }
-
-    return projectsRepository.addProjectMember(memberInput);
+    return projectsRepository.findUserProjects(userId);
   },
 
-  getUserProjects: (userId: number): Promise<Array<Project>> => {
-    if (!userId) {
-      throw new Error("User ID is required");
-    }
-
-    return projectsRepository.getUserProjects(userId);
-  },
-
-  getProjectById: (projectId: number): Promise<Project | null> => {
-    if (!projectId) {
+  getProjectById: (id: number): Promise<Project | null> => {
+    if (!id) {
       throw new Error("Project ID is required");
     }
-    return projectsRepository.getProjectById(projectId);
+    return projectsRepository.findById(id);
+  },
+
+  deleteProject: (id: number): Promise<number> => {
+    if (!id) {
+      throw new Error("Project ID is required");
+    }
+    return projectsRepository.delete(id);
   },
 };
 

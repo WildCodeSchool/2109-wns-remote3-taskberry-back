@@ -1,90 +1,93 @@
-import { PrismaClient, UsersInProjects } from "@prisma/client";
-import { Project } from "../models/Project";
-import { ProjectInput } from "../inputs/ProjectInput";
-import { UsersProject } from "../models/UsersProject";
+import { PrismaClient } from "@prisma/client";
+import { UserProjects } from "../models/project/UserProjects";
+import { ProjectInput } from "../inputs/project/ProjectInput";
+import { Project } from '../models/project/Project';
+import { NewMembersInput } from '../inputs/project/newMembersInput';
 
 const prisma = new PrismaClient();
 
 const projectsRepository = {
   create: async (projectInput: ProjectInput): Promise<Project> => {
-    const { name, description, createdAt, estimateEndAt, UsersInProject } =
+    const { title, description, createdAt, estimateEndAt, members } =
       projectInput;
-    const { userId, roleId } = UsersInProject;
+    const { userId, role } = members;
 
-    const newProject = await prisma.project.create({
+    return await prisma.project.create({
       data: {
-        name,
+        title,
         description,
         createdAt,
         estimateEndAt,
-      },
-    });
-
-    await prisma.usersInProjects.create({
-      data: {
-        userId,
-        projectId: newProject.id,
-        roleId,
-      },
-    });
-
-    return newProject;
-  },
-
-  addProjectMember: async (
-    memberInput: UsersInProjects
-  ): Promise<UsersProject> => {
-    const { userId, projectId, roleId } = memberInput;
-
-    const isUserInProject = await prisma.usersInProjects.findUnique({
-      where: { userId_projectId_roleId: { userId, projectId, roleId } },
-    });
-
-    if (isUserInProject) {
-      throw new Error("User already in project");
-    }
-
-    return await prisma.usersInProjects.create({
-      data: {
-        userId,
-        projectId,
-        roleId,
+        members: {
+          create: [
+            { user: { connect: { id: userId } }, role }
+          ]
+        },
       },
     });
   },
 
-  getUserProjects: async (userId: number): Promise<Project[]> => {
-    return prisma.project.findMany({
+  addMembers: async (
+    data: [NewMembersInput]
+  ): Promise<number> => {
+    await prisma.usersOnProjects.createMany({
+      data,
+      skipDuplicates: true,
+    })
+    return data.length
+  },
+
+  findUserProjects: async (userId: number): Promise<UserProjects[]> => {
+    return await prisma.project.findMany({
       where: {
-        UsersInProject: {
+        members: {
           some: {
             userId,
           },
         },
       },
-      include: {
-        UsersInProject: {
-          include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        estimateEndAt: true,
+        members: {
+          select: {
             user: {
               select: {
                 profilePicture: true,
                 firstName: true,
                 lastName: true,
-              },
+              }
             },
-          },
+            role: true,
+          }
         },
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: 2
+    });
+  },
+
+  findById: async (id: number): Promise<Project | null> => {
+    return await prisma.project.findUnique({
+      where: {
+        id,
       },
     });
   },
 
-  getProjectById: async (projectId: number): Promise<Project | null> => {
-    return prisma.project.findUnique({
+  delete: async (id: number): Promise<number> => {
+    await prisma.project.delete({
       where: {
-        id: projectId,
-      },
-    });
-  },
+        id
+      }
+    })
+    return id
+  }
 };
 
 export default projectsRepository;

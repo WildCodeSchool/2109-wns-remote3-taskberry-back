@@ -1,5 +1,6 @@
 generator client {
     provider = "prisma-client-js"
+    features=["referentialActions"]
 }
 
 generator typegraphql {
@@ -12,60 +13,54 @@ datasource db {
 }
 
 model User {
-    id             Int               @id @default(autoincrement())
-    profilePicture String            @db.VarChar(500)
-    firstName      String            @db.VarChar(25)
-    lastName       String            @db.VarChar(25)
-    email          String            @unique @db.VarChar(50)
-    password       String            @db.VarChar(128)
-    UsersInProject UsersInProjects[]
-    Ticket         Ticket[]
+    id                  Int               @id @default(autoincrement())
+    profilePicture      String            @db.VarChar(500)
+    firstName           String            @db.VarChar(25)
+    lastName            String            @db.VarChar(25)
+    email               String            @unique @db.VarChar(50)
+    password            String            @db.VarChar(128)
+    projects            UsersOnProjects[]
+    tickets             Ticket[]
 }
 
-model Role {
-    id             Int               @id @default(autoincrement())
-    name           String            @db.VarChar(50)
-    UsersInProject UsersInProjects[]
+model UsersOnProjects {
+    user                User              @relation(fields: [userId], references: [id])
+    userId              Int
+    project             Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId           Int
+    role                String            @db.VarChar(50)
+
+    @@id([userId, projectId])
 }
 
 model Project {
-    id             Int               @id @default(autoincrement())
-    name           String            @db.VarChar(50)
-    description    String?           @db.VarChar(255)
-    createdAt      DateTime          @db.Timestamp
-    finishedAt     DateTime?         @db.Timestamp
-    estimateEndAt  DateTime?         @db.Timestamp
-    UsersInProject UsersInProjects[]
-    Ticket         Ticket[]
+    id                  Int               @id @default(autoincrement())
+    title               String            @db.VarChar(50)
+    description         String?           @db.VarChar(255)
+    createdAt           DateTime          @db.Timestamp
+    finishedAt          DateTime?         @db.Timestamp
+    estimateEndAt       DateTime          @db.Timestamp
+    members             UsersOnProjects[]
+    tickets             Ticket[]
 }
 
-model UsersInProjects {
-    user      User    @relation(fields: [userId], references: [id])
-    userId    Int
-    project   Project @relation(fields: [projectId], references: [id])
-    projectId Int
-    role      Role    @relation(fields: [roleId], references: [id])
-    roleId    Int
-
-    @@id([userId, projectId, roleId])
-}
 
 model Ticket {
-    id          Int       @id @default(autoincrement())
-    projectId   Int
-    statusId    Int
-    assigneeId  Int
-    name        String    @db.VarChar(50)
-    description String?   @db.VarChar(500)
-    createdAt   DateTime  @db.Timestamp
-    finishedAt  DateTime? @db.Timestamp
-    status      Status    @relation(fields: [statusId], references: [id])
-    project     Project   @relation(fields: [projectId], references: [id])
-    assignee    User      @relation(fields: [assigneeId], references: [id])
+    id                  Int               @id @default(autoincrement())
+    projectId           Int
+    statusId            Int
+    assigneeId          Int
+    title               String            @db.VarChar(50)
+    description         String?           @db.VarChar(500)
+    createdAt           DateTime          @db.Timestamp
+    finishedAt          DateTime?         @db.Timestamp
+    status              Status            @relation(fields: [statusId], references: [id])
+    project             Project           @relation(fields: [projectId], references: [id])
+    assignee            User              @relation(fields: [assigneeId], references: [id])
 }
 
 model Status {
-    id     Int      @id @default(autoincrement())
-    name   String   @db.VarChar(50)
-    Ticket Ticket[]
+    id                  Int               @id @default(autoincrement())
+    title               String            @db.VarChar(50)
+    tickets             Ticket[]
 }

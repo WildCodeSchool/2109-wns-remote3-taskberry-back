@@ -5,12 +5,12 @@ import { DateTimeResolver } from "graphql-scalars";
 import { GraphQLScalarType } from "graphql";
 
 import { UserResolver } from "./resolvers/UserResolver";
-import { ProjectResolver } from "./resolvers/ProjectResolver";
-import { TicketResolver } from "./resolvers/TicketResolver";
+import { ProjectResolver } from "./resolvers/project/ProjectResolver";
+// import { TicketResolver } from "./resolvers/TicketResolver";
 
 const app = async () => {
   const schema = await tq.buildSchema({
-    resolvers: [UserResolver, ProjectResolver, TicketResolver],
+    resolvers: [UserResolver, ProjectResolver],
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
   });
 

@@ -1,10 +1,10 @@
 import { InputType, Field } from "type-graphql";
-import { UsersProjectInput } from "./UsersProjectInput";
+import { MembersInput } from "./MembersInput";
 
 @InputType()
 export class ProjectInput {
   @Field()
-  name!: string;
+  title!: string;
 
   @Field(() => String, { nullable: true })
   description?: string | null;
@@ -12,9 +12,9 @@ export class ProjectInput {
   @Field(() => Date)
   createdAt!: Date;
 
-  @Field(() => Date, { nullable: true })
-  estimateEndAt?: Date | null;
+  @Field(() => Date)
+  estimateEndAt!: Date;
 
-  @Field(() => UsersProjectInput)
-  UsersInProject!: UsersProjectInput;
+  @Field(() => MembersInput)
+  members!: MembersInput;
 }
