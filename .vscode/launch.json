@@ -1,0 +1,34 @@
+{
+  // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+  // Pointez pour afficher la description des attributs existants.
+  // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+  // et https://code.visualstudio.com/docs/nodejs/nodejs-debugging
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run apollo server in development mode",
+      // absolute path to the runtime executable to be used. Default is node
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+      // launch the program to debug in this directory.
+      "cwd": "${workspaceFolder}",
+      // an absolute path to the Node.js program to debug.
+      "program": "${workspaceFolder}/src/index.ts",
+      // arguments passed to the program to debug.
+      // This attribute is of type array and expects individual arguments as array elements.
+      "args": ["apollo:run"],
+      // the console to launch the program
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.ts",
+      "outFiles": ["${workspaceFolder}/**/*.js"]
+    }
+  ]
+}

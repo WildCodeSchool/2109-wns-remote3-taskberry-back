@@ -91,3 +91,64 @@ Si commits WIP présents sur la branche, rejouer les commits après un `reset` e
 git reset <sha commit parent>
 git push --force
 ```
+### vscode debugger
+
+A l'ouverture de session vscode effectuer 
+
+```sh
+ctrl+shift+P 
+```
+
+puis cliquer sur 
+
+```sh
+"désactiver temporairement l'attachement automatique dans cette session"
+```
+
+vérifier la présence de la configuration ci-dessous dans .vscode/launch.json
+
+```sh
+ "Run apollo server in development mode" 
+```
+
+ouvrir un terminal puis placer les points d'arrêts dans le code 
+ 
+cliquer sur le bouton play dans la barre latérale gauche vscode ou ⇧⌘D correspondant à
+
+```sh
+"Exécuter et déboguer" 
+```
+
+puis sur le bouton vert lecture de
+
+```sh
+ "Run apollo server in development mode" 
+```
+
+dans le terminal / onglet console de debogage vérifier que le server est bien lancé
+
+```sh
+🚀 Server ready at: http://localhost:4000
+```
+
+une instance de node dédiée pour le debug avec VSCode est ouverte et il n'est donc plus possible de run l'application 
+en même temps (conflit de port) aussi ne pas effectuer de :
+
+```sh
+ "yarn start" 
+```
+
+au cas où cette commande a été lancée avant le debugg il faut stopper l'application 
+
+```sh
+CTRL+C 
+```
+
+puis relancer le debugg
+
+depuis Appollo studio effectuer votre requete
+
+le code s'exécutera jusqu’à votre point d'arrêt depuis lequel vous pourrez consulter et vérifier tout ce qui vous semble utile pour traquer ce 🤬 bug.
+
+pour arreter le debugg et couper l'instance de node il suffit d'appuyer sur la touche arret du control panel
+
