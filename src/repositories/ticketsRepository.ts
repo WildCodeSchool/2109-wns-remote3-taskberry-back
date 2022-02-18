@@ -15,9 +15,19 @@ const ticketsRepository = {
         createdAt,
         projectId,
         statusId,
-        assigneeId
+        assigneeId,
       },
     });
+  },
+
+  delete: async (ticketId: number): Promise<Number> => {
+    await prisma.ticket.delete({
+      where: {
+        id: ticketId,
+      },
+    });
+
+    return ticketId;
   },
 };
 
