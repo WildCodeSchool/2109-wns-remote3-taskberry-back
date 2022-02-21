@@ -14,7 +14,7 @@ export class Ticket {
   @Field(() => Date)
   createdAt!: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   finishedAt!: Date | null;
 
   @Field(() => Int)
