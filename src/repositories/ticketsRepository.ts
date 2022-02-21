@@ -29,6 +29,24 @@ const ticketsRepository = {
 
     return ticketId;
   },
+
+  getProjectTickets: async (
+    projectId: number
+  ): Promise<Ticket[] | [] | null> => {
+    const isProjectExists = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!isProjectExists) {
+      return null;
+    }
+
+    return prisma.ticket.findMany({
+      where: {
+        projectId: projectId,
+      },
+    });
+  },
 };
 
 export default ticketsRepository;

@@ -1,6 +1,8 @@
-import { Ticket } from "@prisma/client";
+import { Ticket, PrismaClient } from "@prisma/client";
 import { TicketInput } from "../inputs/TicketInput";
 import ticketsRepository from "../repositories/ticketsRepository";
+
+const prisma = new PrismaClient();
 
 const ticketService = {
   create: (ticketInput: TicketInput): Promise<Ticket> => {
@@ -27,6 +29,26 @@ const ticketService = {
     }
 
     return ticketsRepository.delete(ticketId);
+  },
+
+  getProjectTickets: async (projectId: number): Promise<Ticket[] | [] | null> => {
+    const isProjectExists = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
+
+    if (typeof projectId !== "number") {
+      throw new Error("Project ID must be a number");
+    }
+
+    if (!isProjectExists) {
+      throw new Error("Project doesn't exist");
+    }
+
+    return ticketsRepository.getProjectTickets(projectId);
   },
 };
 
