@@ -49,4 +49,25 @@ describe("ticket resolver", () => {
       ticketId: 1,
     };
   });
+
+  describe("get project tickets query", () => {
+    it("retrieve tickets from a project in db", async () => {
+      const projectTicketsQuery = gql`
+        query Query($projectId: Float!) {
+          getProjectTickets(projectId: $projectId) {
+            name
+            createdAt
+            description
+            projectId
+            statusId
+            assigneeId
+            finishedAt
+          }
+        }
+      `;
+    });
+    const variables = {
+      projectId: 1,
+    };
+  });
 });
