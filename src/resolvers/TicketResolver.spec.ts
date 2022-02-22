@@ -34,9 +34,29 @@ describe("ticket resolver", () => {
         statusId: 1,
         assigneeId: 1,
       },
+     };
+  });
+
+
+  describe('get ticket query', () => {
+    it('should retrieved a new created ticket', () => {
+      const getTicketById = gql`
+      query GetTicket($ticketId: Float!) {
+        getTicketById(ticketId: $ticketId) {
+          id
+          name
+        }
+      }
+    `;
+    });
+    const variables = {
+      ticketInput: {
+        ticketId: 1,
+      },
     };
   });
 
+  
   describe("delete ticket mutation", () => {
     it("deletes a ticket into the db", async () => {
       const addProjectMutation = gql`
