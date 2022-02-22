@@ -1,0 +1,71 @@
+import createTicketAction from "./createTicketAction";
+import { PrismaClient } from "@prisma/client";
+import createProjectAction from "./createProjectAction";
+import createStatusAction from "./createStatusAction";
+import createUserAction from "./createUserAction";
+import updateTicketAction from "./updateTicketAction";
+const faker = require("@faker-js/faker");
+
+const prisma = new PrismaClient();
+afterAll(() => {
+  return expect(prisma.$disconnect()).resolves;
+});
+
+describe("update ticket action - unit", () => {
+    it("updated a ticket correctly", async () => {
+      
+    const savedProject = await createProjectAction({
+      prisma,
+      name: faker.internet.domainName(),
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+    });
+
+    const savedStatus = await createStatusAction({
+      prisma,
+      name: faker.random.word(),
+    });
+
+    const savedAssignee = await createUserAction({
+      prisma,
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const name = faker.git.commitMessage();
+    const description = faker.random.words(10);
+    const projectId = savedProject.id;
+    const statusId = savedStatus.id;
+    const assigneeId = savedAssignee.id;
+    const createdAt = faker.date.recent();
+        
+    const savedTicket = await createTicketAction({
+      prisma,
+      name,
+      description,
+      projectId,
+      statusId,
+      assigneeId,
+      createdAt,
+    });
+
+    const ticketUpdated = await updateTicketAction({
+        prisma,
+        id: savedTicket.id,
+        name: faker.git.commitMessage(),
+        description: faker.random.words(15)
+    });
+    
+
+    const updatedTicket = await prisma.ticket.findUnique({
+      where: { id: savedTicket.id },
+    });
+
+        expect(updatedTicket?.description).toEqual(ticketUpdated.description);
+        expect(updatedTicket?.name).toEqual(ticketUpdated.name);
+  });
+});
