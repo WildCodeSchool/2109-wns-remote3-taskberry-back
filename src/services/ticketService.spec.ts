@@ -3,7 +3,6 @@ import createUserAction from "../actions/createUserAction";
 import createProjectAction from "../actions/createProjectAction";
 import createStatusAction from "../actions/createStatusAction";
 import ticketService from "./ticketsService";
-import getProjectTickets from "../actions/getProjectTicketsAction";
 import createTicketAction from "../actions/createTicketAction";
 const faker = require("@faker-js/faker");
 
