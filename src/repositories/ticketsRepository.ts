@@ -1,10 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-import { TicketInput } from "../inputs/TicketInput";
+import { PartialUpdateTicketInput, TicketInput } from "../inputs/TicketInput";
 import { Ticket } from "../models/Ticket";
 
 const prisma = new PrismaClient();
 
 const ticketsRepository = {
+  getTicketById: async (ticketId: number): Promise<Ticket | null> => {
+    return prisma.ticket.findUnique({
+      where: {
+        id: ticketId,
+      },
+    });
+  },
+
   create: async (ticketInput: TicketInput): Promise<Ticket> => {
     const { name, description, createdAt, projectId, assigneeId, statusId } =
       ticketInput;
@@ -18,16 +26,6 @@ const ticketsRepository = {
         assigneeId,
       },
     });
-  },
-
-  delete: async (ticketId: number): Promise<Number> => {
-    await prisma.ticket.delete({
-      where: {
-        id: ticketId,
-      },
-    });
-
-    return ticketId;
   },
 
   getProjectTickets: async (
@@ -46,6 +44,43 @@ const ticketsRepository = {
         projectId: projectId,
       },
     });
+  },
+
+  update: async (
+    updateTicketInput: PartialUpdateTicketInput
+  ): Promise<Ticket> => {
+    const {
+      id,
+      name,
+      description,
+      finishedAt,
+      statusId,
+      projectId,
+      assigneeId,
+    } = updateTicketInput;
+    return await prisma.ticket.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name?.toLocaleLowerCase().trim(),
+        description: description?.toLocaleLowerCase().trim(),
+        finishedAt,
+        statusId,
+        projectId,
+        assigneeId,
+      },
+    });
+  },
+
+  delete: async (ticketId: number): Promise<Number> => {
+    await prisma.ticket.delete({
+      where: {
+        id: ticketId,
+      },
+    });
+
+    return ticketId;
   },
 };
 
