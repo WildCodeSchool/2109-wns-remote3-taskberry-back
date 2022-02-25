@@ -3,6 +3,7 @@ import projectsRepository from "../repositories/projectsRepository";
 import { ProjectInput } from "../inputs/ProjectInput";
 import { ProjectMemberInput } from "../inputs/ProjectMemberInput";
 import { UsersProject } from "../models/UsersProject";
+import { UserQuery } from "../models/User";
 
 const projectService = {
   create: (projectInput: ProjectInput): Promise<Project> => {
@@ -52,6 +53,14 @@ const projectService = {
       throw new Error("Project ID is required");
     }
     return projectsRepository.getProjectById(projectId);
+  },
+
+  getProjectUsers: (projectId: number): Promise<UserQuery[] | []> => {
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
+
+    return projectsRepository.getProjectUsers(projectId);
   },
 };
 

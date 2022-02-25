@@ -2,6 +2,7 @@ import { PrismaClient, UsersInProjects } from "@prisma/client";
 import { Project } from "../models/Project";
 import { ProjectInput } from "../inputs/ProjectInput";
 import { UsersProject } from "../models/UsersProject";
+import { UserQuery } from "../models/User";
 
 const prisma = new PrismaClient();
 
@@ -69,6 +70,48 @@ const projectsRepository = {
     return prisma.project.findUnique({
       where: {
         id: projectId,
+      },
+    });
+  },
+
+  getProjectUsers: async (
+    projectId: number
+  ): Promise<UserQuery[] | []> => {
+    const isProjectExists = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!isProjectExists) {
+      throw new Error("Project does not exist");
+    }
+
+    return await prisma.user.findMany({
+      where: {
+        UsersInProject: {
+          some: {
+            project: {
+              id: projectId,
+            },
+          },
+        },
+      },
+
+      select: {
+        profilePicture: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        UsersInProject: {
+          select: {
+            project: {
+              select: {
+                description: true,
+                name: true,
+              },
+            },
+            projectId: true,
+          },
+        },
       },
     });
   },
