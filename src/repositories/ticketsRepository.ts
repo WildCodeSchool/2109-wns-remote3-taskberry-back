@@ -43,6 +43,9 @@ const ticketsRepository = {
       where: {
         projectId: projectId,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   },
 
