@@ -5,7 +5,7 @@ import projectService from "../services/projectsService";
 import { ProjectInput } from "../inputs/ProjectInput";
 import { ProjectMemberInput } from "../inputs/ProjectMemberInput";
 import { UsersProject } from "../models/UsersProject";
-
+import { UserQuery } from "../models/User";
 const prisma = new PrismaClient();
 
 @Resolver((of) => Project)
@@ -33,5 +33,10 @@ export class ProjectResolver {
   @Query(() => Project)
   async getProjectById(@Arg("projectId") projectId: number) {
     return await projectService.getProjectById(projectId);
+  }
+
+  @Query(() => [UserQuery])
+  async getProjectUsers(@Arg("projectId") projectId: number) {
+    return await projectService.getProjectUsers(projectId);
   }
 }
