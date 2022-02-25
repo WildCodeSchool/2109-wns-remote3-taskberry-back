@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import createProjectAction from "./createProjectAction";
 import createStatusAction from "./createStatusAction";
 import createUserAction from "./createUserAction";
-import deleteTicketAction from "./deleteTicketAction";
 import getProjectTickets from "./getProjectTicketsAction";
 const faker = require("@faker-js/faker");
 
