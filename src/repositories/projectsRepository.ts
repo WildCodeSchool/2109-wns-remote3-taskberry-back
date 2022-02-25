@@ -63,6 +63,9 @@ const projectsRepository = {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   },
 
