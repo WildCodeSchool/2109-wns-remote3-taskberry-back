@@ -1,13 +1,12 @@
 import "reflect-metadata";
-import {
-  InputType,
-  Field,
-  ObjectType,
-} from "type-graphql";
+import { InputType, Field, ObjectType } from "type-graphql";
 import { IsEmail } from "class-validator";
 
 @InputType()
 export class UserMutation {
+  @Field(() => String)
+  id?: number;
+
   @Field(() => String)
   profilePicture!: string;
 
