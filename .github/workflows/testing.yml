@@ -1,0 +1,35 @@
+name: Testing
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  PRISMA_DATABASE_URL: mysql://root:root@localhost:3306/taskberry
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Start mysql
+        run: sudo service mysql start
+
+      - name: Create test database
+        run: mysql -uroot -proot -e "create database taskberry"
+
+      - name: Migrate database from Prisma
+        run: npx prisma migrate dev --name init
+
+      - name: Generate Prisma objects
+        run: npx prisma generate
+
+      - name: Run tests
+        run: yarn jest -i
