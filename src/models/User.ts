@@ -5,9 +5,6 @@ import { IsEmail } from "class-validator";
 @InputType()
 export class UserMutation {
   @Field(() => String)
-  id?: number;
-
-  @Field(() => String)
   profilePicture!: string;
 
   @Field(() => String)
