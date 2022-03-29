@@ -17,7 +17,6 @@ const userRepository = {
   },
 
   createUser: async ({
-    id,
     profilePicture,
     email,
     firstName,
@@ -28,7 +27,6 @@ const userRepository = {
 
     return prisma.user.create({
       data: {
-        id,
         profilePicture,
         email,
         firstName,

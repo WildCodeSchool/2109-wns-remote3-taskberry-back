@@ -14,7 +14,6 @@ const configRepository = {
    */
   createBaseData: async (): Promise<string> => {
     const savedUser = await userService.createUser({
-      id: 1,
       profilePicture: faker.image.people(500, 500),
       firstName: "John",
       lastName: "Doe",
