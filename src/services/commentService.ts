@@ -9,7 +9,13 @@ import commentRepository from "../repositories/commentRepository";
 const prisma = new PrismaClient();
 
 const commentService = {
-  getTicketComments: async (ticketId: number): Promise<Comment[]> => {
+  getTicketComments: async (
+    ticketId: number
+  ): Promise<
+    | Comment[]
+    | (Comment | (Comment & { [x: string]: never }))[]
+    | "Please either choose `select` or `include`"
+  > => {
     const isTicketExists = await prisma.ticket.findUnique({
       where: { id: ticketId },
     });
@@ -30,7 +36,13 @@ const commentService = {
     return commentRepository.getTicketComments(ticketId);
   },
 
-  create: (commentInput: CommentInput): Promise<Comment> => {
+  create: (
+    commentInput: CommentInput
+  ): Promise<
+    | "Please either choose `select` or `include`"
+    | Comment
+    | (Comment & { [x: string]: never })
+  > => {
     const { description, ticketId, userId, createdAt } = commentInput;
 
     if (!description) {

@@ -1,4 +1,6 @@
+import { User } from "@prisma/client";
 import { ObjectType, Field, ID, Int } from "type-graphql";
+import { UserQuery } from "./User";
 
 @ObjectType()
 export class Comment {
@@ -16,4 +18,7 @@ export class Comment {
 
   @Field(() => Int)
   userId!: number;
+
+  @Field(() => UserQuery)
+  user?: User;
 }

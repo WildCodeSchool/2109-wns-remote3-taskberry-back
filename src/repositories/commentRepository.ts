@@ -8,13 +8,30 @@ import { Comment } from "../models/Comment";
 const prisma = new PrismaClient();
 
 const commentRepository = {
-  getTicketComments: async (ticketId: number): Promise<Comment[]> => {
+  getTicketComments: async (
+    ticketId: number
+  ): Promise<
+    | Comment[]
+    | (Comment | (Comment & { [x: string]: never }))[]
+    | "Please either choose `select` or `include`"
+  > => {
     return prisma.comment.findMany({
-      where: { ticketId: ticketId },
+      where: {
+        ticketId: ticketId,
+      },
+      include: {
+        User: true,
+      },
     });
   },
 
-  create: async (commentInput: CommentInput): Promise<Comment> => {
+  create: async (
+    commentInput: CommentInput
+  ): Promise<
+    | "Please either choose `select` or `include`"
+    | Comment
+    | (Comment & { [x: string]: never })
+  > => {
     const { description, userId, ticketId, createdAt } = commentInput;
     return await prisma.comment.create({
       data: {
@@ -22,6 +39,9 @@ const commentRepository = {
         userId,
         ticketId,
         createdAt,
+      },
+      include: {
+        User: true,
       },
     });
   },
