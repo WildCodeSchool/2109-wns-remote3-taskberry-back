@@ -8,10 +8,17 @@ import { UserResolver } from "./resolvers/UserResolver";
 import { ProjectResolver } from "./resolvers/ProjectResolver";
 import { TicketResolver } from "./resolvers/TicketResolver";
 import { ConfigResolver } from "./resolvers/ConfigResolver";
+import { CommentResolver } from "./resolvers/CommentResolver";
 
 const app = async () => {
   const schema = await tq.buildSchema({
-    resolvers: [UserResolver, ProjectResolver, TicketResolver, ConfigResolver],
+    resolvers: [
+      UserResolver,
+      ProjectResolver,
+      TicketResolver,
+      ConfigResolver,
+      CommentResolver,
+    ],
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
   });
 
