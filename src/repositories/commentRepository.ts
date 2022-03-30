@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import {
   CommentInput,
   PartialUpdateCommentInput,
@@ -10,11 +10,7 @@ const prisma = new PrismaClient();
 const commentRepository = {
   getTicketComments: async (
     ticketId: number
-  ): Promise<
-    | Comment[]
-    | (Comment | (Comment & { [x: string]: never }))[]
-    | "Please either choose `select` or `include`"
-  > => {
+  ): Promise<(Comment & { User: User })[]> => {
     return prisma.comment.findMany({
       where: {
         ticketId: ticketId,
@@ -27,11 +23,7 @@ const commentRepository = {
 
   create: async (
     commentInput: CommentInput
-  ): Promise<
-    | "Please either choose `select` or `include`"
-    | Comment
-    | (Comment & { [x: string]: never })
-  > => {
+  ): Promise<Comment & { User: User }> => {
     const { description, userId, ticketId, createdAt } = commentInput;
     return await prisma.comment.create({
       data: {
@@ -46,7 +38,9 @@ const commentRepository = {
     });
   },
 
-  update: async (partialInput: PartialUpdateCommentInput): Promise<Comment> => {
+  update: async (
+    partialInput: PartialUpdateCommentInput
+  ): Promise<Comment & { User: User }> => {
     const { id, description } = partialInput;
 
     return await prisma.comment.update({
@@ -55,6 +49,9 @@ const commentRepository = {
       },
       data: {
         description: description.toLocaleLowerCase().trim(),
+      },
+      include: {
+        User: true,
       },
     });
   },
