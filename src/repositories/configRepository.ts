@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import createRoleAction from "../actions/createRoleAction";
 import createTicketAction from "../actions/createTicketAction";
+import commentService from "../services/commentService";
 import projectService from "../services/projectsService";
 import userService from "../services/userService";
 
@@ -58,21 +59,21 @@ const configRepository = {
       },
     });
 
-    const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
-    const projectId = savedProject.id;
-    const statusId = 1;
-    const assigneeId = savedUser.id;
-    const createdAt = faker.date.recent();
-
-    await createTicketAction({
+    const savedTicket = await createTicketAction({
       prisma,
-      name,
-      description,
-      projectId,
-      statusId,
-      assigneeId,
-      createdAt,
+      name: faker.git.commitMessage(),
+      description: faker.random.words(10),
+      projectId: savedProject.id,
+      statusId: 1,
+      assigneeId: savedUser.id,
+      createdAt: faker.date.recent(),
+    });
+
+    await commentService.create({
+      userId: savedUser.id,
+      ticketId: savedTicket.id,
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
     });
 
     return "[SUCCESS] Base data created";
