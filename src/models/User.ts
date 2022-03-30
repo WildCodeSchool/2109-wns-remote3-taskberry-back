@@ -36,3 +36,12 @@ export class UserQuery {
   @IsEmail()
   email!: string;
 }
+
+@ObjectType()
+export class UserComment {
+  @Field(() => String)
+  profilePicture!: string;
+
+  @Field(() => String)
+  firstName!: string;
+}
