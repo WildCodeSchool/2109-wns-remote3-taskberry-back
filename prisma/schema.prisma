@@ -20,6 +20,7 @@ model User {
     password       String            @db.VarChar(128)
     UsersInProject UsersInProjects[]
     Ticket         Ticket[]
+    Comment        Comment[]
 }
 
 model Role {
@@ -62,10 +63,21 @@ model Ticket {
     status      Status    @relation(fields: [statusId], references: [id])
     project     Project   @relation(fields: [projectId], references: [id])
     assignee    User      @relation(fields: [assigneeId], references: [id])
+    comments    Comment[]
 }
 
 model Status {
     id     Int      @id @default(autoincrement())
     name   String   @db.VarChar(50)
     Ticket Ticket[]
+}
+
+model Comment {
+    id          Int      @id @default(autoincrement())
+    description String   @db.VarChar(255)
+    createdAt   DateTime @db.Timestamp
+    userId      Int
+    ticketId    Int
+    User        User     @relation(fields: [userId], references: [id])
+    Ticket      Ticket   @relation(fields: [ticketId], references: [id])
 }
