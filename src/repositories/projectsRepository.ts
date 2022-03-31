@@ -100,6 +100,7 @@ const projectsRepository = {
       },
 
       select: {
+        id: true,
         profilePicture: true,
         firstName: true,
         lastName: true,

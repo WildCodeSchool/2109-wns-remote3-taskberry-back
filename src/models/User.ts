@@ -23,6 +23,9 @@ export class UserMutation {
 
 @ObjectType()
 export class UserQuery {
+  @Field(() => ID)
+  id!: number;
+
   @Field(() => String)
   profilePicture!: string;
 
