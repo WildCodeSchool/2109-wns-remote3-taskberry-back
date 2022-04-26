@@ -2,7 +2,7 @@
   "name": "taskberry-back",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.ts"
+    "start:docker": "npx prisma generate && npx prisma studio && npx prisma deploy && nodemon src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",

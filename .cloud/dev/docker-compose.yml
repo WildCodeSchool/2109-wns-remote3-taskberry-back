@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  app:
+    build: 
+      dockerfile: "Dockerfile"
+      context: "../../"
+    command: yarn start:docker
+    volumes:
+      - ../../:/app:cached
+      - /app/node_modules
+    ports:
+      - "4000:4000"
+      - "5555:5555"
+    depends_on:
+      - mysql
+    environment:
+      SERVER_DATABASE_NAME: taskberry
+      PRISMA_DATABASE_URL: mysql://root:root@mysql:3306/taskberry
+
+  mysql:
+    image: mysql
+    container_name: "taskberry_db"
+    volumes:
+      - ../../.data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PORT=3306
+    ports:
+      - "3306:3306"
+    healthcheck:
+       test: ["CMD", "curl -f http://localhost:3306 || exit 1"]
+       timeout: 30s
+       interval: 1m
+       retries: 3
+    restart: always
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
