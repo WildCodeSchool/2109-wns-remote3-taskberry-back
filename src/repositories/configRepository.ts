@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import createRoleAction from "../actions/createRoleAction";
 import createTicketAction from "../actions/createTicketAction";
 import commentService from "../services/commentService";
+import mediaService from "../services/mediaService";
 import projectService from "../services/projectsService";
 import userService from "../services/userService";
 
@@ -74,6 +75,14 @@ const configRepository = {
       ticketId: savedTicket.id,
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
+    });
+
+    await mediaService.create({
+      name: "test.jpg",
+      type: "image/jpeg",
+      url: faker.image.imageUrl(),
+      createdAt: faker.date.recent(),
+      ticketId: 1,
     });
 
     return "[SUCCESS] Base data created";
