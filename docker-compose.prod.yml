@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  server:
+    # build: ./server
+    # To replace with the correct path of your server image
+    # image: gdemessimy/taskberry_back
+    # specify prod ?
+    build :
+      dockerfile: 'Dockerfile.prod'
+      context: "."
+    container_name: "taskberry_back"
+    command: sh -c "npm run build && npm run prod"
+    volumes:
+      - ./:/app:rw,cached
+      - /app/node_modules
+    ports:
+      - "4000:4000"
+      - "5555:5555"
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=4000
+    SERVER_DATABASE_NAME: taskberry
+    PRISMA_DATABASE_URL: mysql://root:root@mysql:3306/taskberry
+    depends_on:
+      - mysql
+
+  client:
+    # build: ./client
+    # To replace with the correct path of your client image
+    # image: gdemessimy/taskberry_front
+     # specify prod ?
+    container_name: "taskberry_front"
+    command: sh -c "npm run build"
+    volumes:
+      - web-client-build:/app/build
+    environment:
+      - NODE_ENV=production 
+
+  mysql:
+    image: mysql
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PORT=3306
+    ports:
+      - "3306:3306"
+    restart: always
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:1.21.3
+    depends_on:
+      - server
+      - client
+    restart: always
+    ports:
+      - ${GATEWAY_PORT:-8000}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - web-client-build:/web-client-build
+      - ./logs:/var/log/nginx
+volumes:
+  web-client-build:
