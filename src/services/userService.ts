@@ -2,10 +2,10 @@ import { AuthenticationError } from "apollo-server";
 import { PrismaClient, User } from "@prisma/client";
 import userRepository from "../repositories/userRepository";
 import { UserMutation, UserQuery } from "../models/User";
+import {compare} from "bcryptjs";
 
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 export const getUserByToken = async (token: string | undefined) => {
   if (!token) {
@@ -51,7 +51,7 @@ const userService = {
     });
 
     if (userToVerify) {
-      const verified: boolean = await bcrypt.compare(
+      const verified: boolean = await compare(
         password,
         userToVerify.password
       );

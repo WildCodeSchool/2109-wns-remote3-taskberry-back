@@ -2,14 +2,18 @@
   "name": "taskberry-back",
   "license": "MIT",
   "scripts": {
-    "start:docker": "npx prisma generate && npx prisma studio && npx prisma deploy && nodemon src/index.ts"
+    "start:docker": "prisma generate && yarn start",
+    "start": "nodemon src/index.ts",
+    "studio": "prisma studio",
+    "migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/node": "^16.11.10",
     "apollo-server": "^3.5.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.2",
     "cors": "^2.8.5",
     "graphql": "15.3.0",

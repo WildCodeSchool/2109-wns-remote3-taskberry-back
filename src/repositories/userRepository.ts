@@ -1,8 +1,8 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UserMutation } from "../models/User";
+import {hash} from "bcryptjs";
 
 const prisma = new PrismaClient();
-const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const userRepository = {
@@ -23,7 +23,7 @@ const userRepository = {
     lastName,
     password,
   }: UserMutation) => {
-    const hash: string = await bcrypt.hash(password, saltRounds);
+    const passwordHash: string = await hash(password, saltRounds);
 
     return prisma.user.create({
       data: {
@@ -31,7 +31,7 @@ const userRepository = {
         email,
         firstName,
         lastName,
-        password: hash,
+        password: passwordHash,
       },
     });
   },

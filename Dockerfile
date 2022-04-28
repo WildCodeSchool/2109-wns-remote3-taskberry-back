@@ -1,8 +1,10 @@
-FROM node:lts-alpine AS base
-WORKDIR /usr/src/app
-RUN apk update \ 
-  && apk add bash \
-  && rm -rf /var/cache/apk/*
-COPY . . 
-RUN yarn install --frozen-lockfile
-RUN yarn prisma generate
+FROM node:16
+
+WORKDIR /app
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install
+
+CMD ["yarn", "start:docker"]
