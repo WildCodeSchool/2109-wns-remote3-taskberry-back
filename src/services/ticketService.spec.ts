@@ -173,4 +173,76 @@ describe("ticketService", () => {
       "Project doesn't exist"
     );
   });
+
+  it("throw an error if trying to get a ticket in another project", async () => {
+    const savedUser1 = await createUserAction({
+      prisma,
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedUser2 = await createUserAction({
+      prisma,
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedProject1 = await createProjectAction({
+      prisma,
+      name: faker.internet.domainName(),
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+    });
+
+    const savedProject2 = await createProjectAction({
+      prisma,
+      name: faker.internet.domainName(),
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+    });
+
+    const savedStatus = await createStatusAction({
+      prisma,
+      name: faker.random.word(),
+    });
+
+    const createdAt = faker.date.recent();
+
+    await createTicketAction({
+      prisma,
+      name: faker.git.commitMessage(),
+      description: faker.random.words(10),
+      projectId: savedProject1.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser1.id,
+      createdAt,
+    });
+
+    const savedTicket2 = await createTicketAction({
+      prisma,
+      name: faker.git.commitMessage(),
+      description: faker.random.words(10),
+      projectId: savedProject2.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser2.id,
+      createdAt,
+    });
+
+    const ticketPromise = ticketService.getTicket(
+      savedTicket2.id,
+      savedUser1.id
+    );
+
+    await expect(ticketPromise).rejects.toThrow(
+      "User is not a member of the project"
+    );
+  });
 });
