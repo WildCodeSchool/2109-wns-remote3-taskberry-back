@@ -18,6 +18,7 @@ quitter mysql avec `exit` et créer un fichier `.env` pour renseigner la variabl
 
 ```dosini
 PRISMA_DATABASE_URL=mysql://root:password$@localhost:3306/taskberry
+JWT_SECRET_KEY=secret_key
 ```
 
 lancer ensuite la migration Prisma
