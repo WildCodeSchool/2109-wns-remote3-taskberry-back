@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { InputType, Field, ObjectType } from "type-graphql";
+import { InputType, Field, ObjectType, ID } from "type-graphql";
 import { IsEmail } from "class-validator";
 
 @InputType()
