@@ -12,7 +12,7 @@ export const getUserByToken = async (token: string | undefined) => {
     throw new AuthenticationError("missing jwt");
   }
 
-  let decodeToken: any = jwt.verify(token, "taskberry");
+  const decodeToken: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
   if (!decodeToken) {
     throw new AuthenticationError("jwt expired");
   }
