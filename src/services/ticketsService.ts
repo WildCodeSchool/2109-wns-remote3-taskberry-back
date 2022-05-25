@@ -6,15 +6,36 @@ const { UserInputError } = require("apollo-server");
 const prisma = new PrismaClient();
 
 const ticketService = {
-  getTicket: (ticketId: number): Promise<Ticket | null> => {
+  getTicket: async (
+    ticketId: number,
+    userId: number
+  ): Promise<Ticket | null> => {
+    const isTicketExists = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+    });
+
+    const isUserMemberOfProject = await prisma.usersInProjects.findFirst({
+      where: { projectId: isTicketExists?.projectId, userId },
+    });
+
     if (!ticketId) {
       throw new Error("Ticket ID is required");
     }
+
     if (ticketId < 1) {
       throw new UserInputError("Invalid argument value", {
         argumentName: "id",
       });
     }
+
+    if (!isTicketExists) {
+      throw new Error("Ticket doesn't exist");
+    }
+
+    if (!isUserMemberOfProject) {
+      throw new Error("User is not a member of the project");
+    }
+
     return ticketsRepository.getTicketById(ticketId);
   },
 
