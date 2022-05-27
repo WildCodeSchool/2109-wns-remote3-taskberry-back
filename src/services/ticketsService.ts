@@ -1,4 +1,5 @@
 import { Ticket, PrismaClient } from "@prisma/client";
+import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import { PartialUpdateTicketInput, TicketInput } from "../inputs/TicketInput";
 import ticketsRepository from "../repositories/ticketsRepository";
 const { UserInputError } = require("apollo-server");
@@ -12,10 +13,6 @@ const ticketService = {
   ): Promise<Ticket | null> => {
     const isTicketExists = await prisma.ticket.findUnique({
       where: { id: ticketId },
-    });
-
-    const isUserMemberOfProject = await prisma.usersInProjects.findFirst({
-      where: { projectId: isTicketExists?.projectId, userId },
     });
 
     if (!ticketId) {
@@ -32,7 +29,7 @@ const ticketService = {
       throw new Error("Ticket doesn't exist");
     }
 
-    if (!isUserMemberOfProject) {
+    if (!await isUserMemberOfProject(isTicketExists?.projectId, userId)) {
       throw new Error("User is not a member of the project");
     }
 
