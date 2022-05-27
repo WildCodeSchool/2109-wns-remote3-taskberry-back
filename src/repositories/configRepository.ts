@@ -48,6 +48,10 @@ const configRepository = {
       name: "Administrateur",
     });
 
+    await createRoleAction({
+      name: "Membre",
+    });
+
     const savedProject = await projectService.create({
       name: faker.internet.domainName(),
       description: faker.random.words(10),
