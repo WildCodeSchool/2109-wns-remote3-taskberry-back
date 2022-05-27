@@ -4,10 +4,12 @@ import { ProjectInput } from "../inputs/ProjectInput";
 import { ProjectMemberInput } from "../inputs/ProjectMemberInput";
 import { UsersProject } from "../models/UsersProject";
 import { UserQuery } from "../models/User";
+import isRoleAdmin from "../helpers/isRoleAdmin";
 
 const projectService = {
-  create: (projectInput: ProjectInput): Promise<Project> => {
+  create: async (projectInput: ProjectInput): Promise<Project> => {
     const { name } = projectInput;
+    const { roleId, userId } = projectInput.UsersInProject;
 
     if (!name) {
       throw new Error("Name is required");
@@ -15,6 +17,14 @@ const projectService = {
 
     if (name.length > 30) {
       throw new Error("Name should have at least one character and max 30");
+    }
+
+    if (roleId || userId) {
+      throw new Error("At least one user with a role is required");
+    }
+
+    if (!(await isRoleAdmin(roleId))) {
+      throw new Error("User creating a project should have admin role");
     }
 
     return projectsRepository.create(projectInput);
