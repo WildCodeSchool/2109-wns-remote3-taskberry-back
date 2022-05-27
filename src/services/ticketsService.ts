@@ -1,4 +1,5 @@
 import { Ticket, PrismaClient } from "@prisma/client";
+import getTicketAction from "../actions/getTicketAction";
 import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import { PartialUpdateTicketInput, TicketInput } from "../inputs/TicketInput";
 import ticketsRepository from "../repositories/ticketsRepository";
@@ -11,10 +12,6 @@ const ticketService = {
     ticketId: number,
     userId: number
   ): Promise<Ticket | null> => {
-    const isTicketExists = await prisma.ticket.findUnique({
-      where: { id: ticketId },
-    });
-
     if (!ticketId) {
       throw new Error("Ticket ID is required");
     }
@@ -25,11 +22,13 @@ const ticketService = {
       });
     }
 
-    if (!isTicketExists) {
+    const ticket = await getTicketAction({ id: ticketId });
+
+    if (!ticket) {
       throw new Error("Ticket doesn't exist");
     }
 
-    if (!(await isUserMemberOfProject(isTicketExists?.projectId, userId))) {
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
       throw new Error("User is not a member of the project");
     }
 
@@ -76,12 +75,22 @@ const ticketService = {
     return ticketsRepository.getProjectTickets(projectId);
   },
 
-  update: (partialInput: PartialUpdateTicketInput): Promise<Ticket> => {
-    const { id, name } = partialInput;
+  update: async (
+    partialInput: PartialUpdateTicketInput,
+    userId: number
+  ): Promise<Ticket> => {
+    const { id } = partialInput;
 
     if (!id) {
       throw new Error("TicketId is required");
     }
+
+    const ticket = await getTicketAction({ id });
+
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not a member of the project");
+    }
+
     return ticketsRepository.update(partialInput);
   },
 
