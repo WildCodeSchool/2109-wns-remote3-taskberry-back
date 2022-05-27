@@ -53,10 +53,6 @@ describe("projectService", () => {
       password: faker.internet.password(),
     });
 
-    const savedRole = await createRoleAction({
-      name: faker.name.jobDescriptor(),
-    });
-
     const newProject = await projectService.create({
       name: faker.internet.domainName(),
       description: faker.random.words(10),
