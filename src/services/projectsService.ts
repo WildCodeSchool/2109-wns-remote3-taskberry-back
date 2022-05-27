@@ -19,7 +19,7 @@ const projectService = {
       throw new Error("Name should have at least one character and max 30");
     }
 
-    if (roleId || userId) {
+    if (!(roleId || userId)) {
       throw new Error("At least one user with a role is required");
     }
 
