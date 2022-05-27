@@ -23,7 +23,8 @@ export class TicketResolver {
 
   @Mutation(() => Ticket)
   async updateTicket(
-    @Arg("partialInput") partialInput: PartialUpdateTicketInput
+    @Arg("partialInput") partialInput: PartialUpdateTicketInput,
+    @Arg("userId") userId: number
   ): Promise<Ticket> {
     const { id, statusId, projectId, assigneeId, name, description } =
       partialInput;
@@ -73,7 +74,7 @@ export class TicketResolver {
       });
     }
 
-    return await ticketService.update(partialInput);
+    return await ticketService.update(partialInput, userId);
   }
 
   @Mutation(() => Number)
