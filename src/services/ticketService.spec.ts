@@ -16,7 +16,6 @@ describe("ticketService", () => {
   it("creates new ticket correctly", async () => {
     // create a user, role, project, status and ticket
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -25,15 +24,14 @@ describe("ticketService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -59,7 +57,6 @@ describe("ticketService", () => {
 
   it("delete a ticket correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -68,15 +65,14 @@ describe("ticketService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -104,7 +100,6 @@ describe("ticketService", () => {
 
   it("get project tickets correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -113,15 +108,14 @@ describe("ticketService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -130,7 +124,6 @@ describe("ticketService", () => {
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId: savedProject.id,
@@ -150,11 +143,11 @@ describe("ticketService", () => {
 
   it("get an empty array from an existing project", async () => {
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: 1,
     });
 
     const projectId = savedProject.id;
@@ -176,7 +169,6 @@ describe("ticketService", () => {
 
   it("throw an error if trying to get a ticket in another project", async () => {
     const savedUser1 = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -185,7 +177,6 @@ describe("ticketService", () => {
     });
 
     const savedUser2 = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -194,30 +185,28 @@ describe("ticketService", () => {
     });
 
     const savedProject1 = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser1.id,
     });
 
     const savedProject2 = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser2.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
     const createdAt = faker.date.recent();
 
     await createTicketAction({
-      prisma,
       name: faker.git.commitMessage(),
       description: faker.random.words(10),
       projectId: savedProject1.id,
@@ -227,7 +216,73 @@ describe("ticketService", () => {
     });
 
     const savedTicket2 = await createTicketAction({
-      prisma,
+      name: faker.git.commitMessage(),
+      description: faker.random.words(10),
+      projectId: savedProject2.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser2.id,
+      createdAt,
+    });
+
+    const ticketPromise = ticketService.getTicket(
+      savedTicket2.id,
+      savedUser1.id
+    );
+
+    await expect(ticketPromise).rejects.toThrow(
+      "User is not a member of the project"
+    );
+  });
+
+  it("throw an error if trying to update a ticket in another project", async () => {
+    const savedUser1 = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedUser2 = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedProject1 = await createProjectAction({
+      name: faker.internet.domainName(),
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+      userId: savedUser1.id,
+    });
+
+    const savedProject2 = await createProjectAction({
+      name: faker.internet.domainName(),
+      description: faker.random.words(10),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+      userId: savedUser2.id,
+    });
+
+    const savedStatus = await createStatusAction({
+      name: faker.random.word(),
+    });
+
+    const createdAt = faker.date.recent();
+
+    await createTicketAction({
+      name: faker.git.commitMessage(),
+      description: faker.random.words(10),
+      projectId: savedProject1.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser1.id,
+      createdAt,
+    });
+
+    const savedTicket2 = await createTicketAction({
       name: faker.git.commitMessage(),
       description: faker.random.words(10),
       projectId: savedProject2.id,

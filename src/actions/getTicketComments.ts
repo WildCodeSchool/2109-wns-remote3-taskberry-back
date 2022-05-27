@@ -1,14 +1,17 @@
 import { Comment, PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface GetTicketCommentsActionParams {
   prisma: PrismaClient;
   id: number;
 }
 
 const getTicketCommentsAction = async ({
-  prisma,
   id,
-}: GetTicketCommentsActionParams): Promise<Comment[]> => {
+}: {
+  id: number;
+}): Promise<Comment[]> => {
   return await prisma.comment.findMany({
     where: { ticketId: id },
   });

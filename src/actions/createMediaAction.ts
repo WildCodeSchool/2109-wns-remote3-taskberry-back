@@ -1,7 +1,8 @@
 import { PrismaClient, Media } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface CreateMediaActionParams {
-  prisma: PrismaClient;
   name: string;
   type: string;
   url: string;
@@ -10,7 +11,6 @@ export interface CreateMediaActionParams {
 }
 
 const createMediaAction = async ({
-  prisma,
   name,
   type,
   url,

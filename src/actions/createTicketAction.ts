@@ -1,7 +1,8 @@
 import { PrismaClient, Ticket } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface CreateTicketActionParams {
-  prisma: PrismaClient;
   name: string;
   description: string;
   projectId: number;
@@ -11,7 +12,6 @@ export interface CreateTicketActionParams {
 }
 
 const createTicketAction = async ({
-  prisma,
   name,
   description,
   projectId,

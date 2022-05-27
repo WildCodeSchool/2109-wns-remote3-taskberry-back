@@ -18,7 +18,6 @@ describe("commentService", () => {
   it("creates new comment correctly", async () => {
     // create a user, role, project, status, ticket and comment
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -27,15 +26,14 @@ describe("commentService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -66,7 +64,6 @@ describe("commentService", () => {
 
   it("delete a comment correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -75,15 +72,14 @@ describe("commentService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -92,7 +88,6 @@ describe("commentService", () => {
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId: savedProject.id,
@@ -119,7 +114,6 @@ describe("commentService", () => {
 
   it("get ticket comments correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -128,15 +122,14 @@ describe("commentService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -145,7 +138,6 @@ describe("commentService", () => {
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId: savedProject.id,
@@ -158,7 +150,6 @@ describe("commentService", () => {
     let createdComments = [];
     for (let i = 0; i < commentsCount; i++) {
       const newComment = await createCommentAction({
-        prisma,
         description,
         createdAt: faker.date.recent(),
         ticketId: savedTicket.id,

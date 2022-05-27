@@ -18,20 +18,18 @@ describe("get ticket action - unit", () => {
     const createdAt = faker.date.recent();
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: 1,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
     const savedAssignee = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -44,7 +42,6 @@ describe("get ticket action - unit", () => {
     const assigneeId = savedAssignee.id;
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId,
@@ -54,7 +51,6 @@ describe("get ticket action - unit", () => {
     });
 
     await getTicketAction({
-      prisma,
       id: savedTicket.id,
     });
 

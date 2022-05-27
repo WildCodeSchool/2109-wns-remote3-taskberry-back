@@ -1,14 +1,12 @@
 import { PrismaClient, Project } from "@prisma/client";
 
-export interface GetProjectActionParams {
-  prisma: PrismaClient;
-  projectId: number;
-}
+const prisma = new PrismaClient();
 
 const getProjectAction = async ({
-  prisma,
   projectId,
-}: GetProjectActionParams): Promise<Project | null> => {
+}: {
+  projectId: number;
+}): Promise<Project | null> => {
   return await prisma.project.findUnique({
     where: { id: projectId },
   });

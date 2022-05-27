@@ -15,7 +15,6 @@ describe("createMediaAction() - unit", () => {
     const createdAt = faker.date.recent();
 
     const savedMedia = await createMediaAction({
-      prisma,
       name,
       type,
       url,

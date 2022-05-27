@@ -1,7 +1,8 @@
 import { PrismaClient, Comment } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface CreateCommentActionParams {
-  prisma: PrismaClient;
   description: string;
   createdAt: Date;
   userId: number;
@@ -9,7 +10,6 @@ export interface CreateCommentActionParams {
 }
 
 const createCommentAction = async ({
-  prisma,
   description,
   createdAt,
   userId,

@@ -1,14 +1,12 @@
 import { PrismaClient, Ticket } from "@prisma/client";
 
-export interface ProjectTicketsActionParams {
-  prisma: PrismaClient;
-  projectId: number;
-}
+const prisma = new PrismaClient();
 
 const getProjectTickets = async ({
-  prisma,
   projectId,
-}: ProjectTicketsActionParams): Promise<Ticket[] | [] | null> => {
+}: {
+  projectId: number;
+}): Promise<Ticket[] | [] | null> => {
   const isProjectExists = await prisma.project.findUnique({
     where: { id: projectId },
   });

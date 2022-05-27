@@ -45,7 +45,6 @@ const configRepository = {
     });
 
     const savedRole = await createRoleAction({
-      prisma: prisma,
       name: "Administrateur",
     });
 
@@ -61,7 +60,6 @@ const configRepository = {
     });
 
     const savedTicket = await createTicketAction({
-      prisma,
       name: faker.git.commitMessage(),
       description: faker.random.words(10),
       projectId: savedProject.id,
