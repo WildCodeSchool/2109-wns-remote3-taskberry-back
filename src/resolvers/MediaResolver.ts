@@ -6,8 +6,11 @@ import { MediaInput } from "../inputs/MediaInput";
 @Resolver((of) => Media)
 export class MediaResolver {
   @Query(() => [Media])
-  async getTicketMedia(@Arg("ticketId") ticketId: number) {
-    return await mediaService.getTicketMedia(ticketId);
+  async getTicketMedia(
+    @Arg("ticketId") ticketId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await mediaService.getTicketMedia(ticketId, userId);
   }
 
   @Mutation(() => Media)
