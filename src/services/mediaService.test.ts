@@ -18,7 +18,6 @@ describe("mediaService", () => {
   it("creates new media correctly", async () => {
     // create a user, role, project, status, ticket and media
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -27,20 +26,19 @@ describe("mediaService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await ticketService.create({
@@ -72,7 +70,6 @@ describe("mediaService", () => {
 
   it("delete a media correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -81,15 +78,14 @@ describe("mediaService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -98,7 +94,6 @@ describe("mediaService", () => {
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId: savedProject.id,
@@ -130,7 +125,6 @@ describe("mediaService", () => {
 
   it("get ticket media correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -139,15 +133,14 @@ describe("mediaService", () => {
     });
 
     const savedProject = await createProjectAction({
-      prisma,
       name: faker.internet.domainName(),
       description: faker.random.words(10),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
     });
 
     const savedStatus = await createStatusAction({
-      prisma,
       name: faker.random.word(),
     });
 
@@ -156,7 +149,6 @@ describe("mediaService", () => {
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
-      prisma,
       name,
       description,
       projectId: savedProject.id,
@@ -166,7 +158,6 @@ describe("mediaService", () => {
     });
 
     await createMediaAction({
-      prisma,
       name: "test.jpg",
       type: "image/jpeg",
       url: faker.image.imageUrl(),
@@ -174,17 +165,14 @@ describe("mediaService", () => {
       ticketId: savedTicket.id,
     });
     await createMediaAction({
-        prisma,
-        name: "test2.jpg",
-        type: "image/jpeg",
-        url: faker.image.imageUrl(),
-        createdAt: createdAt,
-        ticketId: savedTicket.id,
-      });
+      name: "test2.jpg",
+      type: "image/jpeg",
+      url: faker.image.imageUrl(),
+      createdAt: createdAt,
+      ticketId: savedTicket.id,
+    });
 
-    const ticketMedia = await mediaService.getTicketMedia(
-      savedTicket.id
-    );
+    const ticketMedia = await mediaService.getTicketMedia(savedTicket.id);
 
     expect(ticketMedia).toBeTruthy();
     expect(ticketMedia).toHaveLength(2);

@@ -1,14 +1,12 @@
 import { PrismaClient, Status } from "@prisma/client";
 
-export interface CreateStatusActionParams {
-  prisma: PrismaClient;
-  name: string;
-}
+const prisma = new PrismaClient();
 
 const createStatusAction = async ({
-  prisma,
   name,
-}: CreateStatusActionParams): Promise<Status> => {
+}: {
+  name: string;
+}): Promise<Status> => {
   return await prisma.status.create({
     data: { name },
   });

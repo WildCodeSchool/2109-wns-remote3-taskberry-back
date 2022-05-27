@@ -11,7 +11,7 @@ describe("create role action - unit", () => {
   it("create new role correctly", async () => {
     const name = faker.name.jobDescriptor();
 
-    const savedRole = await createRoleAction({ prisma, name });
+    const savedRole = await createRoleAction({ name });
     expect(savedRole.name).toBe(name);
   });
 });

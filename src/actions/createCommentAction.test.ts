@@ -13,7 +13,6 @@ describe("createCommentAction() - unit", () => {
     const createdAt = faker.date.recent();
 
     const savedComment = await createCommentAction({
-      prisma,
       description,
       createdAt,
       userId: 1,

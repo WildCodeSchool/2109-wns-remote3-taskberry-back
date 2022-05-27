@@ -16,7 +16,6 @@ describe("createUserAction() - unit", () => {
 
   it("creates new user correctly", async () => {
     const savedUser = await createUserAction({
-      prisma,
       profilePicture,
       firstName,
       lastName,
@@ -33,7 +32,6 @@ describe("createUserAction() - unit", () => {
   it("fails if tries to create records with the same user twice", async () => {
     await expect(() =>
       createUserAction({
-        prisma,
         profilePicture,
         firstName,
         lastName,

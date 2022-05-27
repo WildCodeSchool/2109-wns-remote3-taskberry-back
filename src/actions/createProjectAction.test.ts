@@ -15,11 +15,11 @@ describe("createProjectAction() - unit", () => {
     const estimateEndAt = faker.date.future();
 
     const savedProject = await createProjectAction({
-      prisma,
       name,
       description,
       createdAt,
       estimateEndAt,
+      userId: 1,
     });
 
     expect(savedProject.name).toBe(name);

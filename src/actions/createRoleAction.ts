@@ -1,14 +1,8 @@
 import { PrismaClient, Role } from "@prisma/client";
 
-export interface CreateRoleActionParams {
-  prisma: PrismaClient;
-  name: string;
-}
+const prisma = new PrismaClient();
 
-const createRoleAction = async ({
-  prisma,
-  name,
-}: CreateRoleActionParams): Promise<Role> => {
+const createRoleAction = async ({ name }: { name: string }): Promise<Role> => {
   return await prisma.role.create({ data: { name } });
 };
 

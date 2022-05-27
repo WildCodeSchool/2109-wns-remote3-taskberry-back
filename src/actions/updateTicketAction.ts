@@ -1,19 +1,19 @@
 import { PrismaClient, Ticket } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface UpdateTicketActionParams {
-    prisma: PrismaClient;
-    id: number;
-    name?: string;
-    description?: string;
-    projectId?: number;
-    statusId?: number;
-    assigneeId?: number;
-    createdAt?: string;
+  id: number;
+  name?: string;
+  description?: string;
+  projectId?: number;
+  statusId?: number;
+  assigneeId?: number;
+  createdAt?: string;
 }
 
 const updateTicketAction = async ({
-    prisma,
-    id,
+  id,
   name,
   description,
   projectId,
@@ -21,7 +21,7 @@ const updateTicketAction = async ({
   assigneeId,
   createdAt,
 }: UpdateTicketActionParams): Promise<Ticket> => {
-    return await prisma.ticket.update({
+  return await prisma.ticket.update({
     where: { id: id },
     data: { name, description, projectId, statusId, assigneeId, createdAt },
   });

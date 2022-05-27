@@ -1,14 +1,8 @@
 import { PrismaClient, Ticket } from "@prisma/client";
 
-export interface DeleteTicketActionParams {
-  prisma: PrismaClient;
-  id: number;
-}
+const prisma = new PrismaClient();
 
-const deleteTicketAction = async ({
-  prisma,
-  id,
-}: DeleteTicketActionParams): Promise<Ticket> => {
+const deleteTicketAction = async ({ id }: { id: number }): Promise<Ticket> => {
   return await prisma.ticket.delete({
     where: { id: id },
   });

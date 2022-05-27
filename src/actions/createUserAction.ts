@@ -1,7 +1,8 @@
 import { PrismaClient, User } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 export interface CreateUserActionParams {
-  prisma: PrismaClient;
   profilePicture: string;
   firstName: string;
   lastName: string;
@@ -10,7 +11,6 @@ export interface CreateUserActionParams {
 }
 
 const createUserAction = async ({
-  prisma,
   profilePicture,
   firstName,
   lastName,

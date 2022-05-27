@@ -21,7 +21,6 @@ describe("projectService", () => {
     const email = faker.internet.email(firstName, lastName);
 
     const savedUser = await createUserAction({
-      prisma,
       profilePicture,
       firstName,
       lastName,
@@ -37,7 +36,7 @@ describe("projectService", () => {
 
   it("create new role correctly", async () => {
     const name = faker.name.jobDescriptor();
-    const savedRole = await createRoleAction({ prisma, name });
+    const savedRole = await createRoleAction({ name });
 
     expect(savedRole.name).toBe(name);
   });
@@ -47,7 +46,6 @@ describe("projectService", () => {
     const lastName = faker.name.lastName();
 
     const savedUser = await createUserAction({
-      prisma,
       profilePicture: faker.image.people(500, 500),
       firstName,
       lastName,
@@ -56,7 +54,6 @@ describe("projectService", () => {
     });
 
     const savedRole = await createRoleAction({
-      prisma,
       name: faker.name.jobDescriptor(),
     });
 
@@ -65,7 +62,7 @@ describe("projectService", () => {
       description: faker.random.words(10),
       createdAt,
       estimateEndAt,
-      UsersInProject: { userId: savedUser.id, roleId: savedRole.id },
+      UsersInProject: { userId: savedUser.id, roleId: 1 },
     });
     const projectDB = await projectService.getProjectById(newProject.id);
 
