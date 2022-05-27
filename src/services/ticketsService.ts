@@ -29,15 +29,15 @@ const ticketService = {
       throw new Error("Ticket doesn't exist");
     }
 
-    if (!await isUserMemberOfProject(isTicketExists?.projectId, userId)) {
+    if (!(await isUserMemberOfProject(isTicketExists?.projectId, userId))) {
       throw new Error("User is not a member of the project");
     }
 
     return ticketsRepository.getTicketById(ticketId);
   },
 
-  create: (ticketInput: TicketInput): Promise<Ticket> => {
-    const { name } = ticketInput;
+  create: async (ticketInput: TicketInput): Promise<Ticket> => {
+    const { name, projectId, assigneeId } = ticketInput;
 
     if (!name) {
       throw new Error("Name is required");
@@ -45,6 +45,10 @@ const ticketService = {
 
     if (name.length > 30) {
       throw new Error("Name should have at least one character and max 30");
+    }
+
+    if (!(await isUserMemberOfProject(projectId, assigneeId))) {
+      throw new Error("User is not a member of the project");
     }
 
     return ticketsRepository.create(ticketInput);
