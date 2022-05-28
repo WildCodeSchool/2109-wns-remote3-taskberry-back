@@ -13,7 +13,7 @@ afterAll(() => {
   return expect(prisma.$disconnect()).resolves;
 });
 
-describe("mediaService", () => {
+describe("mediaService - security", () => {
   it("throw an error if non-member user trying to get a media", async () => {
     // create a user, role, project, status, ticket and media
     const savedUser1 = await createUserAction({

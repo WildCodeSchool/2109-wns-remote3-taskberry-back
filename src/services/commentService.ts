@@ -1,5 +1,6 @@
 import { Comment, PrismaClient } from "@prisma/client";
 import { UserInputError } from "apollo-server";
+import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import {
   CommentInput,
   PartialUpdateCommentInput,
@@ -10,17 +11,18 @@ const prisma = new PrismaClient();
 
 const commentService = {
   getTicketComments: async (
-    ticketId: number
+    ticketId: number,
+    userId: number
   ): Promise<
     | Comment[]
     | (Comment | (Comment & { [x: string]: never }))[]
     | "Please either choose `select` or `include`"
   > => {
-    const isTicketExists = await prisma.ticket.findUnique({
+    const ticket = await prisma.ticket.findUnique({
       where: { id: ticketId },
     });
 
-    if (!isTicketExists) {
+    if (!ticket) {
       throw new Error("Ticket doesn't exist");
     }
 
@@ -33,6 +35,11 @@ const commentService = {
         argumentName: "id",
       });
     }
+
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not a member of the project");
+    }
+
     return commentRepository.getTicketComments(ticketId);
   },
 
