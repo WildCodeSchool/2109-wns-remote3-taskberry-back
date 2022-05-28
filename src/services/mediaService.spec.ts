@@ -54,13 +54,16 @@ describe("mediaService", () => {
     const mediaType = "image/jpeg";
     const mediaUrl = faker.image.imageUrl();
 
-    const savedMedia = await mediaService.create({
-      name: mediaName,
-      type: mediaType,
-      url: mediaUrl,
-      createdAt: createdAt,
-      ticketId: savedTicket.id,
-    });
+    const savedMedia = await mediaService.create(
+      {
+        name: mediaName,
+        type: mediaType,
+        url: mediaUrl,
+        createdAt: createdAt,
+        ticketId: savedTicket.id,
+      },
+      savedUser.id
+    );
 
     expect(savedMedia.name).toBe(mediaName);
     expect(savedMedia.type).toBe(mediaType);
@@ -106,13 +109,16 @@ describe("mediaService", () => {
     const mediaType = "image/jpeg";
     const mediaUrl = faker.image.imageUrl();
 
-    const savedMedia = await mediaService.create({
-      name: mediaName,
-      type: mediaType,
-      url: mediaUrl,
-      createdAt: createdAt,
-      ticketId: savedTicket.id,
-    });
+    const savedMedia = await mediaService.create(
+      {
+        name: mediaName,
+        type: mediaType,
+        url: mediaUrl,
+        createdAt: createdAt,
+        ticketId: savedTicket.id,
+      },
+      savedUser.id
+    );
 
     await mediaService.delete(savedMedia.id);
 

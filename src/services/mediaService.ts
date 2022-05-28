@@ -41,8 +41,12 @@ const mediaService = {
     return mediaRepository.getTicketMedia(ticketId);
   },
 
-  create: async (mediaInput: MediaInput): Promise<Media> => {
+  create: async (mediaInput: MediaInput, userId: number): Promise<Media> => {
     const { url, ticketId, createdAt } = mediaInput;
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+    });
 
     if (!url) {
       throw new Error("Media URL is required");
@@ -54,6 +58,10 @@ const mediaService = {
 
     if (!createdAt) {
       throw new Error("Create date is required");
+    }
+
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not a member of the project");
     }
 
     return mediaRepository.create(mediaInput);
