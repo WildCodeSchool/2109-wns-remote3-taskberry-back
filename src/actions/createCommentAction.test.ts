@@ -9,7 +9,7 @@ afterAll(() => {
 
 describe("createCommentAction() - unit", () => {
   it("creates new comment correctly", async () => {
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedComment = await createCommentAction({

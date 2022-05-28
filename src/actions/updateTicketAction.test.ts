@@ -15,7 +15,7 @@ describe("update ticket action - unit", () => {
   it("updated a ticket correctly", async () => {
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: 1,
@@ -34,7 +34,7 @@ describe("update ticket action - unit", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const projectId = savedProject.id;
     const statusId = savedStatus.id;
     const assigneeId = savedAssignee.id;

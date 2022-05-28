@@ -32,7 +32,7 @@ describe("projectService - security", () => {
 
     const projectPromise = projectService.create({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt,
       estimateEndAt,
       UsersInProject: { userId: savedUser.id, roleId: savedRole.id },

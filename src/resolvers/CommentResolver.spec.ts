@@ -27,7 +27,7 @@ describe("comment resolver", () => {
     });
     const variables = {
       projectInput: {
-        description: faker.random.words(10),
+        description: faker.random.words(5),
         createdAt: faker.date.recent(),
         estimateEndAt: faker.date.future(),
         ticketId: 1,

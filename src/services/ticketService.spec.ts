@@ -25,7 +25,7 @@ describe("ticketService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -36,7 +36,7 @@ describe("ticketService", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await ticketService.create({
@@ -66,7 +66,7 @@ describe("ticketService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -77,7 +77,7 @@ describe("ticketService", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await ticketService.create({
@@ -109,7 +109,7 @@ describe("ticketService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -120,7 +120,7 @@ describe("ticketService", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
@@ -144,7 +144,7 @@ describe("ticketService", () => {
   it("get an empty array from an existing project", async () => {
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: 1,
