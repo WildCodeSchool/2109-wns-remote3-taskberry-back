@@ -14,8 +14,11 @@ export class MediaResolver {
   }
 
   @Mutation(() => Media)
-  async createMedia(@Arg("mediaInput") mediaInput: MediaInput) {
-    return await mediaService.create(mediaInput);
+  async createMedia(
+    @Arg("mediaInput") mediaInput: MediaInput,
+    @Arg("userId") userId: number
+  ) {
+    return await mediaService.create(mediaInput, userId);
   }
 
   @Mutation(() => Number)
