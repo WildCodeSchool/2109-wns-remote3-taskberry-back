@@ -72,12 +72,15 @@ const configRepository = {
       createdAt: faker.date.recent(),
     });
 
-    await commentService.create({
-      userId: savedUser.id,
-      ticketId: savedTicket.id,
-      description: faker.random.words(5),
-      createdAt: faker.date.recent(),
-    });
+    await commentService.create(
+      {
+        userId: savedUser.id,
+        ticketId: savedTicket.id,
+        description: faker.random.words(5),
+        createdAt: faker.date.recent(),
+      },
+      savedUser.id
+     );
 
     await mediaService.create(
       {

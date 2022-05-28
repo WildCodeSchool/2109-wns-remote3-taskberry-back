@@ -50,12 +50,15 @@ describe("commentService", () => {
       createdAt,
     });
 
-    const savedComment: any = await commentService.create({
-      description,
-      createdAt: faker.date.recent(),
-      ticketId: savedTicket.id,
-      userId: savedUser.id,
-    });
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt: faker.date.recent(),
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
+    );
 
     expect(savedComment.description).toBe(description);
     expect(savedComment.ticketId).toBe(savedTicket.id);
@@ -96,12 +99,15 @@ describe("commentService", () => {
       createdAt,
     });
 
-    const savedComment: any = await commentService.create({
-      description,
-      createdAt,
-      ticketId: savedTicket.id,
-      userId: savedUser.id,
-    });
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt,
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
+    );
 
     await commentService.delete(savedComment.id);
 
