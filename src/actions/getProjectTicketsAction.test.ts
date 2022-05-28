@@ -13,7 +13,7 @@ afterAll(() => {
 
 describe("project tickets action - unit", () => {
   it("get ticket from an existing project", async () => {
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 

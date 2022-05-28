@@ -37,7 +37,7 @@ describe("mediaService", () => {
       name: faker.random.word(),
     });
 
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
@@ -89,7 +89,7 @@ describe("mediaService", () => {
       name: faker.random.word(),
     });
 
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
@@ -144,7 +144,7 @@ describe("mediaService", () => {
       name: faker.random.word(),
     });
 
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
