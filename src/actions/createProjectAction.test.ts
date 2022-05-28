@@ -10,7 +10,7 @@ afterAll(() => {
 describe("createProjectAction() - unit", () => {
   it("creates new project correctly", async () => {
     const name = faker.internet.domainName();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
     const estimateEndAt = faker.date.future();
 

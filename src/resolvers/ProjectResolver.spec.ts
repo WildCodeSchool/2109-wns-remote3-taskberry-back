@@ -27,7 +27,7 @@ describe("project resolver", () => {
     const variables = {
       projectInput: {
         name: faker.internet.domainName(),
-        description: faker.random.words(10),
+        description: faker.random.words(5),
         createdAt: faker.date.recent(),
         estimateEndAt: faker.date.future(),
         UsersInProject: {

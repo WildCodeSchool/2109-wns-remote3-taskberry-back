@@ -27,7 +27,7 @@ describe("mediaService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -79,7 +79,7 @@ describe("mediaService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -90,7 +90,7 @@ describe("mediaService", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
@@ -134,7 +134,7 @@ describe("mediaService", () => {
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser.id,
@@ -145,7 +145,7 @@ describe("mediaService", () => {
     });
 
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedTicket = await createTicketAction({
@@ -172,7 +172,10 @@ describe("mediaService", () => {
       ticketId: savedTicket.id,
     });
 
-    const ticketMedia = await mediaService.getTicketMedia(savedTicket.id);
+    const ticketMedia = await mediaService.getTicketMedia(
+      savedTicket.id,
+      savedUser.id
+    );
 
     expect(ticketMedia).toBeTruthy();
     expect(ticketMedia).toHaveLength(2);

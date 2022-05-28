@@ -54,7 +54,7 @@ const configRepository = {
 
     const savedProject = await projectService.create({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       UsersInProject: {
@@ -65,7 +65,7 @@ const configRepository = {
 
     const savedTicket = await createTicketAction({
       name: faker.git.commitMessage(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       projectId: savedProject.id,
       statusId: 1,
       assigneeId: savedUser.id,
@@ -75,7 +75,7 @@ const configRepository = {
     await commentService.create({
       userId: savedUser.id,
       ticketId: savedTicket.id,
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
     });
 

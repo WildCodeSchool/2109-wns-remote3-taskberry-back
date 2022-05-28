@@ -14,12 +14,12 @@ afterAll(() => {
 describe("get ticket action - unit", () => {
   it("get a ticket by id correctly", async () => {
     const name = faker.git.commitMessage();
-    const description = faker.random.words(10);
+    const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: 1,

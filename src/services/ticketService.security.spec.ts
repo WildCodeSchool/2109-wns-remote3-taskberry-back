@@ -32,7 +32,7 @@ describe("ticketService - security", () => {
 
     const savedProject1 = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser1.id,
@@ -40,7 +40,7 @@ describe("ticketService - security", () => {
 
     const savedProject2 = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser2.id,
@@ -54,7 +54,7 @@ describe("ticketService - security", () => {
 
     await createTicketAction({
       name: faker.git.commitMessage(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       projectId: savedProject1.id,
       statusId: savedStatus.id,
       assigneeId: savedUser1.id,
@@ -63,7 +63,7 @@ describe("ticketService - security", () => {
 
     const savedTicket2 = await createTicketAction({
       name: faker.git.commitMessage(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       projectId: savedProject2.id,
       statusId: savedStatus.id,
       assigneeId: savedUser2.id,
@@ -99,7 +99,7 @@ describe("ticketService - security", () => {
 
     const savedProject1 = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser1.id,
@@ -107,7 +107,7 @@ describe("ticketService - security", () => {
 
     const savedProject2 = await createProjectAction({
       name: faker.internet.domainName(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       userId: savedUser2.id,
@@ -121,7 +121,7 @@ describe("ticketService - security", () => {
 
     await createTicketAction({
       name: faker.git.commitMessage(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       projectId: savedProject1.id,
       statusId: savedStatus.id,
       assigneeId: savedUser1.id,
@@ -130,7 +130,7 @@ describe("ticketService - security", () => {
 
     const savedTicket2 = await createTicketAction({
       name: faker.git.commitMessage(),
-      description: faker.random.words(10),
+      description: faker.random.words(5),
       projectId: savedProject2.id,
       statusId: savedStatus.id,
       assigneeId: savedUser2.id,

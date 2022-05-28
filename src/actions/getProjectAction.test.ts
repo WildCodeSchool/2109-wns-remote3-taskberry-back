@@ -30,7 +30,7 @@ type savedRoleType = {
 
 const initialValues = {
   name: faker.internet.domainName(),
-  description: faker.random.words(10),
+  description: faker.random.words(5),
   createdAt: faker.date.recent(),
   estimateEndAt: faker.date.future(),
   profilePicture: faker.image.people(500, 500),
