@@ -33,7 +33,7 @@ describe("update ticket action - unit", () => {
       password: faker.internet.password(),
     });
 
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const projectId = savedProject.id;
     const statusId = savedStatus.id;
@@ -51,7 +51,7 @@ describe("update ticket action - unit", () => {
 
     const ticketUpdated = await updateTicketAction({
       id: savedTicket.id,
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(15),
     });
 

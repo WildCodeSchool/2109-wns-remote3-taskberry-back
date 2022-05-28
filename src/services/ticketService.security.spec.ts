@@ -53,7 +53,7 @@ describe("ticketService - security", () => {
     const createdAt = faker.date.recent();
 
     await createTicketAction({
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(5),
       projectId: savedProject1.id,
       statusId: savedStatus.id,
@@ -62,7 +62,7 @@ describe("ticketService - security", () => {
     });
 
     const savedTicket2 = await createTicketAction({
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(5),
       projectId: savedProject2.id,
       statusId: savedStatus.id,
@@ -120,7 +120,7 @@ describe("ticketService - security", () => {
     const createdAt = faker.date.recent();
 
     await createTicketAction({
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(5),
       projectId: savedProject1.id,
       statusId: savedStatus.id,
@@ -129,7 +129,7 @@ describe("ticketService - security", () => {
     });
 
     const savedTicket2 = await createTicketAction({
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(5),
       projectId: savedProject2.id,
       statusId: savedStatus.id,

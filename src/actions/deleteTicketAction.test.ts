@@ -13,7 +13,7 @@ afterAll(() => {
 
 describe("delete ticket action - unit", () => {
   it("delete a ticket correctly", async () => {
-    const name = faker.git.commitMessage();
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
     const description = faker.random.words(5);
     const createdAt = faker.date.recent();
 

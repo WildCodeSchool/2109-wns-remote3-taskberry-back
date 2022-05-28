@@ -28,7 +28,7 @@ describe("ticket resolver", () => {
     });
     const variables = {
       ticketInput: {
-        name: faker.git.commitMessage(),
+        name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
         createdAt: faker.date.recent(),
         projectId: 1,
         statusId: 1,

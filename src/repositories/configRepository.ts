@@ -64,7 +64,7 @@ const configRepository = {
     });
 
     const savedTicket = await createTicketAction({
-      name: faker.git.commitMessage(),
+      name: `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       description: faker.random.words(5),
       projectId: savedProject.id,
       statusId: 1,
