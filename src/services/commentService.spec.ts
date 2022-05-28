@@ -159,7 +159,8 @@ describe("commentService", () => {
     }
 
     const ticketComments = await commentService.getTicketComments(
-      savedTicket.id
+      savedTicket.id,
+      savedUser.id
     );
 
     expect(ticketComments).toBeTruthy();
@@ -168,7 +169,7 @@ describe("commentService", () => {
 
   it("throw an error from a non-existing ticket", async () => {
     const ticketId = faker.mersenne.rand(100000000, 999999999);
-    const ticketCommentsPromise = commentService.getTicketComments(ticketId);
+    const ticketCommentsPromise = commentService.getTicketComments(ticketId, 1);
 
     await expect(ticketCommentsPromise).rejects.toThrow("Ticket doesn't exist");
   });

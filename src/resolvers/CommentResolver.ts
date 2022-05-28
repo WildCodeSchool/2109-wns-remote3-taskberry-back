@@ -9,8 +9,11 @@ import commentService from "../services/commentService";
 @Resolver((of) => Comment)
 export class CommentResolver {
   @Query(() => [Comment])
-  async getTicketComments(@Arg("ticketId") ticketId: number) {
-    return await commentService.getTicketComments(ticketId);
+  async getTicketComments(
+    @Arg("ticketId") ticketId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await commentService.getTicketComments(ticketId, userId);
   }
 
   @Mutation(() => Comment)

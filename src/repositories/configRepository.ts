@@ -79,13 +79,16 @@ const configRepository = {
       createdAt: faker.date.recent(),
     });
 
-    await mediaService.create({
-      name: "test.jpg",
-      type: "image/jpeg",
-      url: faker.image.imageUrl(),
-      createdAt: faker.date.recent(),
-      ticketId: 1,
-    });
+    await mediaService.create(
+      {
+        name: "test.jpg",
+        type: "image/jpeg",
+        url: faker.image.imageUrl(),
+        createdAt: faker.date.recent(),
+        ticketId: 1,
+      },
+      savedUser.id
+    );
 
     return "[SUCCESS] Base data created";
   },
