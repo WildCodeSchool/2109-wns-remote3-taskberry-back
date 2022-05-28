@@ -17,8 +17,11 @@ export class CommentResolver {
   }
 
   @Mutation(() => Comment)
-  async createComment(@Arg("commentInput") commentInput: CommentInput) {
-    return await commentService.create(commentInput);
+  async createComment(
+    @Arg("commentInput") commentInput: CommentInput,
+    @Arg("userId") userId: number
+  ) {
+    return await commentService.create(commentInput, userId);
   }
 
   @Mutation(() => Comment)

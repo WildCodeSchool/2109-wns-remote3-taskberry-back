@@ -43,14 +43,20 @@ const commentService = {
     return commentRepository.getTicketComments(ticketId);
   },
 
-  create: (
-    commentInput: CommentInput
+  create: async (
+    commentInput: CommentInput,
+    userId: number
   ): Promise<
     | "Please either choose `select` or `include`"
     | Comment
     | (Comment & { [x: string]: never })
   > => {
-    const { description, ticketId, userId, createdAt } = commentInput;
+    const { description, ticketId, createdAt } = commentInput;
+    const commentUserId = commentInput.userId;
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+    });
 
     if (!description) {
       throw new Error("Comment description is required");
@@ -60,12 +66,16 @@ const commentService = {
       throw new Error("Ticket ID is required");
     }
 
-    if (!userId) {
+    if (!commentUserId) {
       throw new Error("User ID is required");
     }
 
     if (!createdAt) {
       throw new Error("Create date is required");
+    }
+
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not a member of the project");
     }
 
     return commentRepository.create(commentInput);
