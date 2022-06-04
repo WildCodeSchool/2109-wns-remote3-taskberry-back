@@ -57,7 +57,7 @@ const userService = {
       );
 
       if (verified) {
-        const token = await jwt.sign(userToVerify, "taskberry", {
+        const token = await jwt.sign(userToVerify, process.env.JWT_SECRET_KEY, {
           expiresIn: "2h",
         });
         return token;
