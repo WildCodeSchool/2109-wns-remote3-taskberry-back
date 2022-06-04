@@ -1,4 +1,4 @@
-import { Comment, PrismaClient } from "@prisma/client";
+import { Comment, PrismaClient, User } from "@prisma/client";
 import { UserInputError } from "apollo-server";
 import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import {
@@ -13,11 +13,7 @@ const commentService = {
   getTicketComments: async (
     ticketId: number,
     userId: number
-  ): Promise<
-    | Comment[]
-    | (Comment | (Comment & { [x: string]: never }))[]
-    | "Please either choose `select` or `include`"
-  > => {
+  ): Promise<(Comment & { User: User })[]> => {
     const ticket = await prisma.ticket.findUnique({
       where: { id: ticketId },
     });
@@ -46,11 +42,7 @@ const commentService = {
   create: async (
     commentInput: CommentInput,
     userId: number
-  ): Promise<
-    | "Please either choose `select` or `include`"
-    | Comment
-    | (Comment & { [x: string]: never })
-  > => {
+  ): Promise<Comment & { User: User }> => {
     const { description, ticketId, createdAt } = commentInput;
     const commentUserId = commentInput.userId;
 
@@ -81,11 +73,18 @@ const commentService = {
     return commentRepository.create(commentInput);
   },
 
-  update: async (partialInput: PartialUpdateCommentInput): Promise<Comment> => {
+  update: async (
+    partialInput: PartialUpdateCommentInput,
+    userId: number
+  ): Promise<Comment> => {
     const { id, description } = partialInput;
 
     const isCommentExists = await prisma.comment.findUnique({
       where: { id: id },
+    });
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: isCommentExists?.ticketId },
     });
 
     if (!id) {
@@ -98,6 +97,14 @@ const commentService = {
 
     if (!description) {
       throw new Error("Comment description is required");
+    }
+
+    if (!(await isUserMemberOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not a member of the project");
+    }
+
+    if (userId !== isCommentExists.userId) {
+      throw new Error("User is not the owner of the resource");
     }
 
     return commentRepository.update(partialInput);

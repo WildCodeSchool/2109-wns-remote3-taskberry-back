@@ -118,6 +118,61 @@ describe("commentService", () => {
     expect(deletedComment).toBeNull();
   });
 
+  it("update a comment correctly", async () => {
+    const savedUser = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedProject = await createProjectAction({
+      name: faker.internet.domainName(),
+      description: faker.random.words(5),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
+    });
+
+    const savedStatus = await createStatusAction({
+      name: faker.random.word(),
+    });
+
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+    const description = faker.random.words(5);
+    const createdAt = faker.date.recent();
+
+    const savedTicket = await createTicketAction({
+      name,
+      description,
+      projectId: savedProject.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser.id,
+      createdAt,
+    });
+
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt,
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
+    );
+
+    const updatedComment = await commentService.update(
+      {
+        id: savedComment.id,
+        description: "updated comment",
+      },
+      savedUser.id
+    );
+
+    expect(updatedComment.description).toBe("updated comment");
+  });
+
   it("get ticket comments correctly", async () => {
     const savedUser = await createUserAction({
       profilePicture: faker.image.people(500, 500),
