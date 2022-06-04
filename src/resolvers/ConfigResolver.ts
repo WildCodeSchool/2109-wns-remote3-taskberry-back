@@ -10,4 +10,9 @@ export class ConfigResolver {
   async createBaseData() {
     return await configService.createBaseData();
   }
+
+  @Mutation(() => String)
+  async flushDatabase() {
+    return await configService.flushDatabase();
+  }
 }

@@ -80,7 +80,7 @@ const configRepository = {
         createdAt: faker.date.recent(),
       },
       savedUser.id
-     );
+    );
 
     await mediaService.create(
       {
@@ -94,6 +94,34 @@ const configRepository = {
     );
 
     return "[SUCCESS] Base data created";
+  },
+
+  /**
+   * Flush every table in the database
+   * @returns string
+   */
+  flushDatabase: async (): Promise<string> => {
+    const deleteComments = prisma.comment.deleteMany();
+    const deleteMedias = prisma.media.deleteMany();
+    const deleteTickets = prisma.ticket.deleteMany();
+    const deleteProjects = prisma.project.deleteMany();
+    const deleteStatus = prisma.status.deleteMany();
+    const deleteUsersInProjects = prisma.usersInProjects.deleteMany();
+    const deleteRoles = prisma.role.deleteMany();
+    const deleteUsers = prisma.user.deleteMany();
+
+    await prisma.$transaction([
+      deleteComments,
+      deleteMedias,
+      deleteTickets,
+      deleteStatus,
+      deleteUsersInProjects,
+      deleteProjects,
+      deleteRoles,
+      deleteUsers,
+    ]);
+
+    return "[SUCCESS] Database flushed";
   },
 };
 
