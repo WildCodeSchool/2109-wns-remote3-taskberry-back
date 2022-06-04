@@ -26,9 +26,10 @@ export class CommentResolver {
 
   @Mutation(() => Comment)
   async updateComment(
-    @Arg("partialInput") partialInput: PartialUpdateCommentInput
+    @Arg("partialInput") partialInput: PartialUpdateCommentInput,
+    @Arg("userId") userId: number
   ) {
-    return await commentService.update(partialInput);
+    return await commentService.update(partialInput, userId);
   }
 
   @Mutation(() => Number)

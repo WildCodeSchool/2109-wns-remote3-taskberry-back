@@ -48,7 +48,7 @@ const commentRepository = {
         id: id,
       },
       data: {
-        description: description.toLocaleLowerCase().trim(),
+        description: description.trim(),
       },
       include: {
         User: true,
