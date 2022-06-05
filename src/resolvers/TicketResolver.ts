@@ -78,8 +78,11 @@ export class TicketResolver {
   }
 
   @Mutation(() => Number)
-  async deleteTicket(@Arg("ticketId") ticketId: number) {
-    return await ticketService.delete(ticketId);
+  async deleteTicket(
+    @Arg("ticketId") ticketId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await ticketService.delete(ticketId, userId);
   }
 
   @Query(() => [Ticket])

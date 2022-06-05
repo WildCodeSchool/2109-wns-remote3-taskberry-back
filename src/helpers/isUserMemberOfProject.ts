@@ -7,6 +7,6 @@ export default async function (
   userId: number | undefined
 ) {
   return await prisma.usersInProjects.findFirst({
-    where: { projectId: projectId, userId },
+    where: { projectId, userId },
   });
 }

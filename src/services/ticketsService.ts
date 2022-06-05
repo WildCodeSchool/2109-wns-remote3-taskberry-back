@@ -1,5 +1,6 @@
 import { Ticket, PrismaClient } from "@prisma/client";
 import getTicketAction from "../actions/getTicketAction";
+import isUserAdminOfProject from "../helpers/isUserAdminOfProject";
 import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import { PartialUpdateTicketInput, TicketInput } from "../inputs/TicketInput";
 import ticketsRepository from "../repositories/ticketsRepository";
@@ -94,13 +95,19 @@ const ticketService = {
     return ticketsRepository.update(partialInput);
   },
 
-  delete: (ticketId: number): Promise<Number> => {
+  delete: async (ticketId: number, userId: number): Promise<Number> => {
     if (!ticketId) {
       throw new Error("Ticket ID is required");
     }
 
     if (typeof ticketId !== "number") {
       throw new Error("Ticket ID must be a number");
+    }
+
+    const ticket = await getTicketAction({ id: ticketId });
+
+    if (!(await isUserAdminOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not the project Administrator");
     }
 
     return ticketsRepository.delete(ticketId);
