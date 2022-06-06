@@ -2,7 +2,8 @@
   "name": "taskberry-back",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.ts"
+    "start": "nodemon src/index.ts",
+    "test": "yarn jest -i"
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",
