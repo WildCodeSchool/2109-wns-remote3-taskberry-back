@@ -33,7 +33,10 @@ export class CommentResolver {
   }
 
   @Mutation(() => Number)
-  async deleteComment(@Arg("commentId") commentId: number) {
-    return await commentService.delete(commentId);
+  async deleteComment(
+    @Arg("commentId") commentId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await commentService.delete(commentId, userId);
   }
 }
