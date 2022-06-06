@@ -20,6 +20,14 @@ export class ProjectResolver {
     return await projectService.addProjectMember(memberInput);
   }
 
+  @Mutation(() => Number)
+  async deleteProject(
+    @Arg("projectId") projectId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await projectService.delete(projectId, userId);
+  }
+
   @Query(() => [Project])
   async getProjects() {
     return prisma.project.findMany();
@@ -29,7 +37,7 @@ export class ProjectResolver {
   async getUserProjects(@Arg("userId") userId: number) {
     return await projectService.getUserProjects(userId);
   }
-  
+
   @Query(() => Project)
   async getProjectById(@Arg("projectId") projectId: number) {
     return await projectService.getProjectById(projectId);

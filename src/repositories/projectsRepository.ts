@@ -54,6 +54,16 @@ const projectsRepository = {
     });
   },
 
+  delete: async (projectId: number): Promise<Number> => {
+    await prisma.project.delete({
+      where: {
+        id: projectId,
+      },
+    });
+
+    return projectId;
+  },
+
   getUserProjects: async (userId: number): Promise<Project[]> => {
     return prisma.project.findMany({
       where: {
@@ -77,9 +87,7 @@ const projectsRepository = {
     });
   },
 
-  getProjectUsers: async (
-    projectId: number
-  ): Promise<UserQuery[] | []> => {
+  getProjectUsers: async (projectId: number): Promise<UserQuery[] | []> => {
     const isProjectExists = await prisma.project.findUnique({
       where: { id: projectId },
     });

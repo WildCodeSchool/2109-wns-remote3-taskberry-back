@@ -5,6 +5,10 @@ import { ProjectMemberInput } from "../inputs/ProjectMemberInput";
 import { UsersProject } from "../models/UsersProject";
 import { UserQuery } from "../models/User";
 import isRoleAdmin from "../helpers/isRoleAdmin";
+import { PrismaClient } from "@prisma/client";
+import isUserAdminOfProject from "../helpers/isUserAdminOfProject";
+
+const prisma = new PrismaClient();
 
 const projectService = {
   create: async (projectInput: ProjectInput): Promise<Project> => {
@@ -48,6 +52,34 @@ const projectService = {
     }
 
     return projectsRepository.addProjectMember(memberInput);
+  },
+
+  delete: async (projectId: number, userId: number): Promise<Number> => {
+    const isProjectExists = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
+
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
+
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
+
+    if (!isProjectExists) {
+      throw new Error("Project doesn't exist");
+    }
+
+    if (!(await isUserAdminOfProject(projectId, userId))) {
+      throw new Error("User is not the project Administrator");
+    }
+
+    return projectsRepository.delete(projectId);
   },
 
   getUserProjects: (userId: number): Promise<Project[]> => {
