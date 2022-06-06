@@ -142,12 +142,20 @@ describe("ticketService", () => {
   });
 
   it("get an empty array from an existing project", async () => {
+    const savedUser = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
     const savedProject = await createProjectAction({
       name: faker.internet.domainName(),
       description: faker.random.words(5),
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
-      userId: 1,
+      userId: savedUser.id,
     });
 
     const projectId = savedProject.id;
