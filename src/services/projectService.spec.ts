@@ -68,4 +68,33 @@ describe("projectService", () => {
     expect(newProject.createdAt).toEqual(projectDB?.createdAt);
     expect(newProject.estimateEndAt).toEqual(projectDB?.estimateEndAt);
   });
+
+  it("deletes a project correctly", async () => {
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
+
+    const savedUser = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName,
+      lastName,
+      email: faker.internet.email(firstName, lastName),
+      password: faker.internet.password(),
+    });
+
+    const savedProject = await projectService.create({
+      name: faker.internet.domainName(),
+      description: faker.random.words(5),
+      createdAt,
+      estimateEndAt,
+      UsersInProject: { userId: savedUser.id, roleId: 1 },
+    });
+
+    await projectService.delete(savedProject.id, savedUser.id);
+
+    const deletedProject = await prisma.project.findUnique({
+      where: { id: savedProject.id },
+    });
+
+    expect(deletedProject).toBeNull();
+  });
 });
