@@ -265,4 +265,69 @@ describe("commentService - security", () => {
       "User is not the owner of the resource"
     );
   });
+
+  it("throw an error if user trying to delete a comment is not project admin", async () => {
+    const savedUser1 = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedUser2 = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+
+    const savedProject = await createProjectAction({
+      name: faker.internet.domainName(),
+      description: faker.random.words(5),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+      userId: savedUser1.id,
+    });
+
+    await projectService.addProjectMember({
+      roleId: 2,
+      userId: savedUser2.id,
+      projectId: savedProject.id,
+    });
+
+    const savedStatus = await createStatusAction({
+      name: faker.random.word(),
+    });
+
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+    const description = faker.random.words(5);
+    const createdAt = faker.date.recent();
+
+    const savedTicket = await createTicketAction({
+      name,
+      description,
+      projectId: savedProject.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser1.id,
+      createdAt,
+    });
+
+    const comment = await commentService.create(
+      {
+        userId: savedUser1.id,
+        ticketId: savedTicket.id,
+        description: faker.random.words(5),
+        createdAt: faker.date.recent(),
+      },
+      savedUser1.id
+    );
+
+    const commentPromise = commentService.delete(comment.id, savedUser2.id);
+
+    await expect(commentPromise).rejects.toThrow(
+      "User is not the project Administrator"
+    );
+  });
 });

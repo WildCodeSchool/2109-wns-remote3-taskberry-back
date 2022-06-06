@@ -1,5 +1,6 @@
 import { Comment, PrismaClient, User } from "@prisma/client";
 import { UserInputError } from "apollo-server";
+import isUserAdminOfProject from "../helpers/isUserAdminOfProject";
 import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import {
   CommentInput,
@@ -110,13 +111,29 @@ const commentService = {
     return commentRepository.update(partialInput);
   },
 
-  delete: (commentId: number): Promise<Number> => {
+  delete: async (commentId: number, userId: number): Promise<Number> => {
+    const isCommentExists = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: isCommentExists?.ticketId },
+    });
+
     if (!commentId) {
       throw new Error("Comment ID is required");
     }
 
     if (typeof commentId !== "number") {
       throw new Error("Comment ID must be a number");
+    }
+
+    if (!isCommentExists) {
+      throw new Error("Comment doesn't exist");
+    }
+
+    if (!(await isUserAdminOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not the project Administrator");
     }
 
     return commentRepository.delete(commentId);
