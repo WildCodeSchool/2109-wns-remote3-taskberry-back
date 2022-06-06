@@ -44,12 +44,17 @@ const configRepository = {
       ],
     });
 
-    const savedRole = await createRoleAction({
-      name: "Administrateur",
-    });
-
-    await createRoleAction({
-      name: "Membre",
+    await prisma.role.createMany({
+      data: [
+        {
+          id: 1,
+          name: "Administrateur",
+        },
+        {
+          id: 2,
+          name: "Membre",
+        },
+      ],
     });
 
     const savedProject = await projectService.create({
@@ -58,7 +63,7 @@ const configRepository = {
       createdAt: faker.date.recent(),
       estimateEndAt: faker.date.future(),
       UsersInProject: {
-        roleId: savedRole.id,
+        roleId: 1,
         userId: savedUser.id,
       },
     });
@@ -88,7 +93,7 @@ const configRepository = {
         type: "image/jpeg",
         url: faker.image.imageUrl(),
         createdAt: faker.date.recent(),
-        ticketId: 1,
+        ticketId: savedTicket.id,
       },
       savedUser.id
     );
