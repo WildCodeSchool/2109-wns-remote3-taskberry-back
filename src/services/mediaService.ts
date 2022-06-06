@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { UserInputError } from "apollo-server";
+import isUserAdminOfProject from "../helpers/isUserAdminOfProject";
 import isUserMemberOfProject from "../helpers/isUserMemberOfProject";
 import { MediaInput } from "../inputs/MediaInput";
 import { Media } from "../models/Media";
@@ -67,19 +68,25 @@ const mediaService = {
     return mediaRepository.create(mediaInput);
   },
 
-  delete: (mediaId: number): Promise<Number> => {
+  delete: async (mediaId: number, userId: number): Promise<Number> => {
+    const isMediaExists = await prisma.media.findUnique({
+      where: { id: mediaId },
+    });
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: isMediaExists?.ticketId },
+    });
+
     if (!mediaId) {
       throw new Error("Media ID is required");
     }
 
-    if (typeof mediaId !== "number") {
-      throw new Error("Media ID must be a number");
+    if (!isMediaExists) {
+      throw new Error("Media doesn't exist");
     }
 
-    if (mediaId < 1) {
-      throw new UserInputError("Invalid argument value", {
-        argumentName: "id",
-      });
+    if (!(await isUserAdminOfProject(ticket?.projectId, userId))) {
+      throw new Error("User is not the project Administrator");
     }
 
     return mediaRepository.delete(mediaId);

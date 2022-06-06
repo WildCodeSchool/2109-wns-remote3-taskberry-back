@@ -22,7 +22,10 @@ export class MediaResolver {
   }
 
   @Mutation(() => Number)
-  async deleteMedia(@Arg("mediaId") mediaId: number) {
-    return await mediaService.delete(mediaId);
+  async deleteMedia(
+    @Arg("mediaId") mediaId: number,
+    @Arg("userId") userId: number
+  ) {
+    return await mediaService.delete(mediaId, userId);
   }
 }
