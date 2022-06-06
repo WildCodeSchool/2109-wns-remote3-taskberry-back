@@ -109,7 +109,7 @@ describe("commentService", () => {
       savedUser.id
     );
 
-    await commentService.delete(savedComment.id);
+    await commentService.delete(savedComment.id, savedUser.id);
 
     const deletedComment = await prisma.comment.findUnique({
       where: { id: savedComment.id },

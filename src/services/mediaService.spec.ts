@@ -120,7 +120,7 @@ describe("mediaService", () => {
       savedUser.id
     );
 
-    await mediaService.delete(savedMedia.id);
+    await mediaService.delete(savedMedia.id, savedUser.id);
 
     const deletedMedia = await prisma.media.findUnique({
       where: { id: savedMedia.id },

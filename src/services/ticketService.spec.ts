@@ -89,7 +89,7 @@ describe("ticketService", () => {
       createdAt,
     });
 
-    await ticketService.delete(savedTicket.id);
+    await ticketService.delete(savedTicket.id, savedUser.id);
 
     const deletedTicket = await prisma.ticket.findUnique({
       where: { id: savedTicket.id },
