@@ -55,6 +55,12 @@ const projectsRepository = {
   },
 
   delete: async (projectId: number): Promise<Number> => {
+    await prisma.usersInProjects.deleteMany({
+      where: {
+        projectId: projectId,
+      },
+    });
+
     await prisma.project.delete({
       where: {
         id: projectId,
