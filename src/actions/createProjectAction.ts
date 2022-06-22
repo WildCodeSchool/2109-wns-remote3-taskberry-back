@@ -1,4 +1,5 @@
 import { PrismaClient, Project } from "@prisma/client";
+import findAdminRoleId from "../helpers/findAdminRoleId";
 
 const prisma = new PrismaClient();
 
@@ -26,11 +27,13 @@ const createProjectAction = async ({
     },
   });
 
+  const adminRoleId = await findAdminRoleId();
+
   await prisma.usersInProjects.create({
     data: {
       userId,
       projectId: project.id,
-      roleId: 1,
+      roleId: Number(adminRoleId),
     },
   });
 
