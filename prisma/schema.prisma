@@ -43,7 +43,7 @@ model Project {
 model UsersInProjects {
     user      User    @relation(fields: [userId], references: [id])
     userId    Int
-    project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    project   Project @relation(fields: [projectId], references: [id])
     projectId Int
     role      Role    @relation(fields: [roleId], references: [id])
     roleId    Int
@@ -61,7 +61,7 @@ model Ticket {
     createdAt   DateTime  @db.Timestamp
     finishedAt  DateTime? @db.Timestamp
     status      Status    @relation(fields: [statusId], references: [id])
-    project     Project   @relation(fields: [projectId], references: [id])
+    project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
     assignee    User      @relation(fields: [assigneeId], references: [id])
     comments    Comment[]
     Media       Media[]
@@ -80,7 +80,7 @@ model Comment {
     userId      Int
     ticketId    Int
     User        User     @relation(fields: [userId], references: [id])
-    Ticket      Ticket   @relation(fields: [ticketId], references: [id])
+    Ticket      Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }
 
 model Media {
@@ -90,5 +90,5 @@ model Media {
     url       String   @db.VarChar(300)
     createdAt DateTime @db.Timestamp
     ticketId  Int
-    Ticket    Ticket   @relation(fields: [ticketId], references: [id])
+    Ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }
