@@ -1,7 +1,7 @@
-import projectService from "./projectsService";
+import projectService from "../../services/projectsService";
 import { PrismaClient } from "@prisma/client";
-import createUserAction from "../actions/createUserAction";
-import createRoleAction from "../actions/createRoleAction";
+import createUserAction from "../../actions/createUserAction";
+import createRoleAction from "../../actions/createRoleAction";
 const faker = require("@faker-js/faker");
 
 const prisma = new PrismaClient();

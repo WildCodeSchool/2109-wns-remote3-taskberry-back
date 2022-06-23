@@ -1,9 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import createUserAction from "../actions/createUserAction";
-import createProjectAction from "../actions/createProjectAction";
-import createStatusAction from "../actions/createStatusAction";
-import ticketService from "./ticketsService";
-import createTicketAction from "../actions/createTicketAction";
+import createUserAction from "../../actions/createUserAction";
+import createProjectAction from "../../actions/createProjectAction";
+import createStatusAction from "../../actions/createStatusAction";
+import ticketService from "../../services/ticketsService";
+import createTicketAction from "../../actions/createTicketAction";
+import commentService from "../../services/commentService";
+import createCommentAction from "../../actions/createCommentAction";
 const faker = require("@faker-js/faker");
 
 const prisma = new PrismaClient();
@@ -12,9 +14,9 @@ afterAll(() => {
   return expect(prisma.$disconnect()).resolves;
 });
 
-describe("ticketService", () => {
-  it("creates new ticket correctly", async () => {
-    // create a user, role, project, status and ticket
+describe("commentService", () => {
+  it("creates new comment correctly", async () => {
+    // create a user, role, project, status, ticket and comment
     const savedUser = await createUserAction({
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
@@ -48,57 +50,22 @@ describe("ticketService", () => {
       createdAt,
     });
 
-    expect(savedTicket.name).toBe(name);
-    expect(savedTicket.description).toBe(description);
-    expect(savedTicket.projectId).toBe(savedProject.id);
-    expect(savedTicket.statusId).toBe(savedStatus.id);
-    expect(savedTicket.assigneeId).toBe(savedUser.id);
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt: faker.date.recent(),
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
+    );
+
+    expect(savedComment.description).toBe(description);
+    expect(savedComment.ticketId).toBe(savedTicket.id);
+    expect(savedComment.userId).toBe(savedUser.id);
   });
 
-  it("delete a ticket correctly", async () => {
-    const savedUser = await createUserAction({
-      profilePicture: faker.image.people(500, 500),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    });
-
-    const savedProject = await createProjectAction({
-      name: faker.internet.domainName(),
-      description: faker.random.words(5),
-      createdAt: faker.date.recent(),
-      estimateEndAt: faker.date.future(),
-      userId: savedUser.id,
-    });
-
-    const savedStatus = await createStatusAction({
-      name: faker.random.word(),
-    });
-
-    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
-    const description = faker.random.words(5);
-    const createdAt = faker.date.recent();
-
-    const savedTicket = await ticketService.create({
-      name,
-      description,
-      projectId: savedProject.id,
-      statusId: savedStatus.id,
-      assigneeId: savedUser.id,
-      createdAt,
-    });
-
-    await ticketService.delete(savedTicket.id, savedUser.id);
-
-    const deletedTicket = await prisma.ticket.findUnique({
-      where: { id: savedTicket.id },
-    });
-
-    expect(deletedTicket).toBeNull();
-  });
-
-  it("get project tickets correctly", async () => {
+  it("delete a comment correctly", async () => {
     const savedUser = await createUserAction({
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
@@ -132,16 +99,26 @@ describe("ticketService", () => {
       createdAt,
     });
 
-    const projectTickets = await ticketService.getProjectTickets(
-      savedProject.id
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt,
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
     );
 
-    expect(projectTickets).toBeTruthy();
-    expect(projectTickets).toHaveLength(1);
-    expect(projectTickets).toEqual(expect.arrayContaining([savedTicket]));
+    await commentService.delete(savedComment.id, savedUser.id);
+
+    const deletedComment = await prisma.comment.findUnique({
+      where: { id: savedComment.id },
+    });
+
+    expect(deletedComment).toBeNull();
   });
 
-  it("get an empty array from an existing project", async () => {
+  it("update a comment correctly", async () => {
     const savedUser = await createUserAction({
       profilePicture: faker.image.people(500, 500),
       firstName: faker.name.firstName(),
@@ -158,20 +135,103 @@ describe("ticketService", () => {
       userId: savedUser.id,
     });
 
-    const projectId = savedProject.id;
-    const projectTickets = await ticketService.getProjectTickets(projectId);
+    const savedStatus = await createStatusAction({
+      name: faker.random.word(),
+    });
 
-    expect(projectTickets).toBeTruthy();
-    expect(projectTickets).toHaveLength(0);
-    expect(projectTickets).toEqual([]);
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+    const description = faker.random.words(5);
+    const createdAt = faker.date.recent();
+
+    const savedTicket = await createTicketAction({
+      name,
+      description,
+      projectId: savedProject.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser.id,
+      createdAt,
+    });
+
+    const savedComment: any = await commentService.create(
+      {
+        description,
+        createdAt,
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      },
+      savedUser.id
+    );
+
+    const updatedComment = await commentService.update(
+      {
+        id: savedComment.id,
+        description: "updated comment",
+      },
+      savedUser.id
+    );
+
+    expect(updatedComment.description).toBe("updated comment");
   });
 
-  it("throw an error from a non-existing project", async () => {
-    const projectId = faker.mersenne.rand(100000000, 999999999);
-    const projectTicketsPromise = ticketService.getProjectTickets(projectId);
+  it("get ticket comments correctly", async () => {
+    const savedUser = await createUserAction({
+      profilePicture: faker.image.people(500, 500),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
 
-    await expect(projectTicketsPromise).rejects.toThrow(
-      "Project doesn't exist"
+    const savedProject = await createProjectAction({
+      name: faker.internet.domainName(),
+      description: faker.random.words(5),
+      createdAt: faker.date.recent(),
+      estimateEndAt: faker.date.future(),
+      userId: savedUser.id,
+    });
+
+    const savedStatus = await createStatusAction({
+      name: faker.random.word(),
+    });
+
+    const name = `${faker.hacker.verb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+    const description = faker.random.words(5);
+    const createdAt = faker.date.recent();
+
+    const savedTicket = await createTicketAction({
+      name,
+      description,
+      projectId: savedProject.id,
+      statusId: savedStatus.id,
+      assigneeId: savedUser.id,
+      createdAt,
+    });
+
+    const commentsCount = 2;
+    let createdComments = [];
+    for (let i = 0; i < commentsCount; i++) {
+      const newComment = await createCommentAction({
+        description,
+        createdAt: faker.date.recent(),
+        ticketId: savedTicket.id,
+        userId: savedUser.id,
+      });
+      createdComments.push(newComment);
+    }
+
+    const ticketComments = await commentService.getTicketComments(
+      savedTicket.id,
+      savedUser.id
     );
+
+    expect(ticketComments).toBeTruthy();
+    expect(ticketComments).toHaveLength(2);
+  });
+
+  it("throw an error from a non-existing ticket", async () => {
+    const ticketId = faker.mersenne.rand(100000000, 999999999);
+    const ticketCommentsPromise = commentService.getTicketComments(ticketId, 1);
+
+    await expect(ticketCommentsPromise).rejects.toThrow("Ticket doesn't exist");
   });
 });
