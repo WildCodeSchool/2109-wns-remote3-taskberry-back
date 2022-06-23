@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import createUserAction from "../actions/createUserAction";
-import createProjectAction from "../actions/createProjectAction";
-import createStatusAction from "../actions/createStatusAction";
-import createTicketAction from "../actions/createTicketAction";
-import createCommentAction from "../actions/createCommentAction";
-import commentService from "./commentService";
-import projectService from "./projectsService";
+import createUserAction from "../../actions/createUserAction";
+import createProjectAction from "../../actions/createProjectAction";
+import createStatusAction from "../../actions/createStatusAction";
+import createTicketAction from "../../actions/createTicketAction";
+import createCommentAction from "../../actions/createCommentAction";
+import commentService from "../../services/commentService";
+import projectService from "../../services/projectsService";
 const faker = require("@faker-js/faker");
 
 const prisma = new PrismaClient();
