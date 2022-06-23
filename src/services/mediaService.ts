@@ -73,16 +73,16 @@ const mediaService = {
       where: { id: mediaId },
     });
 
+    if (!isMediaExists) {
+      throw new Error("Media doesn't exist");
+    }
+
     const ticket = await prisma.ticket.findUnique({
-      where: { id: isMediaExists?.ticketId },
+      where: { id: isMediaExists.ticketId },
     });
 
     if (!mediaId) {
       throw new Error("Media ID is required");
-    }
-
-    if (!isMediaExists) {
-      throw new Error("Media doesn't exist");
     }
 
     if (!(await isUserAdminOfProject(ticket?.projectId, userId))) {
